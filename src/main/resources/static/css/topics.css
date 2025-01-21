@@ -1,0 +1,158 @@
+.topic-details {
+    flex-grow: 1;
+    padding: 15px; /* Reduced padding */
+    background-color: #fff;
+    overflow-y: hidden;
+    height: 100vh; /* Optional: Keep this if you want full height */
+}
+
+.topic-button {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: inline-block;
+    font-size: 0.75rem; /* Reduced font size */
+    padding: 4px 8px; /* Optional: Added padding for touch targets */
+}
+
+/* Partitions */
+.partitions button {
+    padding: 0.1rem 0.3rem; /* Reduced padding */
+    height: 28px; /* Reduced height */
+    font-size: 0.75rem; /* Reduced font size */
+    margin: 0.05rem; /* Reduced margin */
+}
+
+/* Responsive Styles */
+@media (max-width: 576px) {
+    .topic-details {
+        padding: 10px; /* Further reduce padding for small screens */
+    }
+
+    .topic-button {
+        font-size: 0.65rem; /* Further reduce font size for small screens */
+        padding: 2px 4px; /* Further reduce padding */
+    }
+
+    .partitions button {
+        padding: 0.05rem 0.2rem; /* Further reduce padding for buttons */
+        height: auto; /* Allow for automatic height */
+        font-size: 0.65rem; /* Further reduce font size for small screens */
+        margin: 0; /* Remove margin */
+    }
+}
+
+/* Static header styling */
+.table-responsive thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa; /* Matches Bootstrap's default table header color */
+    z-index: 10;
+}
+
+/* Set smaller row height */
+.table tbody tr {
+    height: 10px;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 4px 8px;
+}
+
+/* Scrollable body styling */
+.table-responsive {
+    height: 100vh; /* Adjust height of the scrollable container */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+/* PARTITION TAB STYLES */
+#partition-tabs {
+    border-bottom: 1px solid #ddd;
+}
+
+#partition-tabs .nav-link {
+    margin-right: 5px;
+}
+
+#partition-details .alert {
+    margin-top: 20px;
+}
+
+
+/* filters styles*/
+.form-label {
+    font-size: 0.85rem;
+}
+
+.form-control-sm, .form-select-sm {
+    height: 30px; /* Smaller height for input and select fields */
+    padding: 0.25rem; /* Reduce padding */
+}
+
+.row.mb-3 {
+    margin-bottom: 0.5rem; /* Reduce bottom margin for rows */
+}
+
+/* Style for default/placeholder values */
+.placeholder-gray::placeholder {
+    color: gray;
+    font-style: italic;
+}
+
+.placeholder-gray {
+    color: gray;
+}
+
+/* Change color to black when user inputs a value */
+.placeholder-gray:not(:placeholder-shown),
+.placeholder-gray:focus {
+    color: black;
+}
+
+/* For <select> elements, gray color for unselected option */
+select.form-select-sm option[disabled],
+select.form-select-sm option[style*="gray"] {
+    color: gray;
+}
+
+/* Reset to black for selected options */
+select.form-select-sm:focus option {
+    color: black;
+}
+
+
+/*configs style*/
+/* Expand the height of the table container */
+.table-responsive {
+    height: 60vh; /* Expanded height */
+}
+
+/* Reduce the height of the rows */
+.table-bordered tbody tr {
+    height: 10px;
+}
+
+/* Adjust font size and padding for smaller rows */
+.table-bordered tbody td {
+    padding: 1px;
+    font-size: 0.875rem; /* Slightly smaller font size */
+}
+
+/* Highlight the selected partition */
+.list-group-item.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+/* Ensure the layout is visually appealing */
+#partition-tabs {
+    max-height: 500px;
+    overflow-y: auto; /* Scrollable list if many partitions */
+}

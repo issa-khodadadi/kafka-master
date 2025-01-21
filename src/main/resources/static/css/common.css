@@ -1,0 +1,202 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+
+body {
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: row; /* Ensure flex direction is set for responsiveness */
+    height: 100vh;
+    margin: 0;
+}
+
+.sidebar {
+    width: 20%;
+    padding: 5px; /* Reduced padding */
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.accordion-button {
+    padding: 0.15rem 0.25rem; /* Reduced padding */
+    height: auto; /* Adjusting height to auto for responsive design */
+    line-height: 1.2;
+    font-size: 0.8rem; /* Reduced font size */
+}
+
+.list-group-item {
+    padding: 0.15rem 0.25rem; /* Reduced padding */
+    margin-bottom: 0.1rem; /* Reduced margin */
+    border: 1px solid #dee2e6;
+    border-radius: 0.2rem; /* Reduced border radius */
+}
+
+/* Topic Button Styles */
+.topic-button {
+    width: 100%; /* Make buttons full-width */
+    text-align: center;
+    background-color: #e3f2fd; /* Light blue background */
+    color: #0d6efd; /* Blue text */
+    border: 1px solid #ddd; /* Light border */
+    padding: 0.5rem 0.75rem; /* Add consistent padding */
+    font-size: 0.9rem; /* Slightly smaller font size */
+    border-radius: 5px; /* Rounded edges */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+    margin-bottom: 3px; /* Add spacing between buttons */
+}
+
+/* Button Hover Effect */
+.topic-button:hover {
+    background-color: #cfe2ff; /* Slightly darker blue on hover */
+    color: #084298; /* Darker text color */
+}
+
+/* Active State */
+.topic-button.active {
+    background-color: #0d6efd; /* Dark blue background */
+    color: #ffffff; /* White text */
+    font-weight: bold; /* Highlight the active button */
+}
+
+.accordion-button::after {
+    font-size: 1.2rem; /* Reduced icon size */
+    margin-bottom: 1px;
+}
+
+.tab-content {
+    margin-top: 5px; /* Reduced margin top */
+}
+
+.text-danger {
+    color: red !important; /* Retain this style */
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    color: black;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 6px; /* Reduced padding */
+    position: relative;
+}
+
+.table th:not(:last-child) {
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.table td {
+    max-width: 150px; /* Reduced max width */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    padding: 6px; /* Reduced padding */
+    background-color: white;
+}
+
+.table td {
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1); /* Reduced shadow size */
+    margin-bottom: -2px; /* Adjusted margin */
+}
+
+.table tr td:last-child {
+    box-shadow: none;
+}
+
+th {
+    position: relative; /* Keep this style */
+}
+
+.table-container {
+    overflow-x: auto;
+    max-height: 350px; /* Reduced max height */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow size */
+    border-radius: 4px; /* Reduced border radius */
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+    transition: height 0.3s ease;
+}
+
+/* Loading */
+body.loading {
+    pointer-events: none;
+}
+
+.loading-overlay {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+.loading-svg {
+    animation: fadeInOut 2s infinite; /* Keep this style */
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; /* Full width for smaller screens */
+        border-right: none; /* Remove border on small screens */
+        height: auto; /* Make height auto */
+    }
+
+    body {
+        flex-direction: column; /* Stack the layout */
+    }
+
+    .table-container {
+        max-height: 250px; /* Adjust max height for smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .accordion-button {
+        font-size: 0.7rem; /* Further reduce font size */
+        padding: 0.1rem 0.2rem; /* Further reduce padding */
+    }
+
+    .list-group-item,
+    .table th,
+    .table td {
+        font-size: 0.7rem; /* Reduce font size for table items */
+        padding: 4px; /* Further reduce padding */
+    }
+
+    .table-container {
+        max-height: 200px; /* Adjust max height for very small screens */
+    }
+}
+
+
+#app-name {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.gray-option {
+    color: gray !important;
+}
+
+
+#addTopicModal {
+    display: block !important;
+}

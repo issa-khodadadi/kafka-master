@@ -1,0 +1,30 @@
+.consumer-button {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: inline-block; /* Keep in-line behavior */
+    font-size: 0.75rem; /* Reduced font size */
+    padding: 4px 8px; /* Optional: Adding padding for touch targets */
+    cursor: pointer;
+    border-radius: 4px; /* Optional: Adding rounded corners */
+    text-align: center; /* Center text for better alignment */
+    background-color: #f0f0f0; /* Optional: Add background color */
+    transition: background-color 0.3s; /* Optional: Transition for hover effect */
+}
+
+.consumer-button:hover {
+    background-color: #e0e0e0; /* Optional: Change background color on hover */
+}
+
+.consumer-button[data-bs-toggle="tooltip"] {
+    cursor: pointer;
+}
+
+/* Responsive Styles */
+@media (max-width: 576px) {
+    .consumer-button {
+        font-size: 0.65rem; /* Further reduced font size for small screens */
+        padding: 2px 6px; /* Reduce padding for compact view */
+    }
+}

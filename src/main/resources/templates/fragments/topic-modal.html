@@ -1,0 +1,296 @@
+<!-- Topics Fragment -->
+<div class="col-md-9 topic-details" th:fragment="topics">
+    <h2 id="topic-name" style="display:none;">Topic: <span id="dynamic-topic-name"></span></h2>
+    <!-- Placeholder for topic name -->
+    <div class="tab-content" id="topic-tabs" style="display:none;">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="properties-tab" data-bs-toggle="tab" href="#properties" role="tab">Properties</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="data-tab" data-bs-toggle="tab" href="#data" role="tab">Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="config-tab" data-bs-toggle="tab" href="#config" role="tab" onclick="loadConfigs()">Config</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="partitions-tab" data-bs-toggle="tab" href="#partitions" role="tab"  onclick="loadPartitions()">Partitions</a>
+            </li>
+        </ul>
+        <div class="tab-content mt-2">
+            <div class="tab-pane fade show active" id="properties" role="tabpanel">
+                <h4>Content Type</h4>
+                <div class="mb-3">
+                    <label for="keyContentType" class="form-label">Key Content Type:</label>
+                    <select id="keyContentType" class="form-select">
+                        <option value="none">No Key</option>
+                        <option value="string">String</option>
+                        <option value="byteArray">Byte Array</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="valueContentType" class="form-label">Value Content Type:</label>
+                    <select id="valueContentType" class="form-select">
+                        <option value="string">String</option>
+                        <option value="byteArray">Byte Array</option>
+                    </select>
+                </div>
+                <hr>
+                <div>
+                    <div>
+                        <div>
+                            <span id="numberOfMessages">Number of Messages: 0</span>
+                            <button  id="refreshMessagesBtn" class="btn btn-primary me-2" onclick="refreshMessagesCount()" title="Refresh">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Tab for Getting Messages -->
+            <div class="tab-pane fade" id="data" role="tabpanel">
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-2">
+                        <label for="fromDateTime" class="form-label mb-1">From Date-Time:</label>
+                        <input type="datetime-local" id="fromDateTime" class="form-control form-control-sm placeholder-gray" placeholder="mm/dd/yyyy --:-- --">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="toDateTime" class="form-label mb-1">To Date-Time:</label>
+                        <input type="datetime-local" id="toDateTime" class="form-control form-control-sm placeholder-gray" placeholder="mm/dd/yyyy --:-- --">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="messageCount" class="form-label mb-1">Number of Messages:</label>
+                        <input type="number" id="messageCount" class="form-control form-control-sm placeholder-gray" value="100" min="1">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="orderBy" class="form-label mb-1">Order By:</label>
+                        <select id="orderBy" class="form-select form-select-sm placeholder-gray">
+                            <option value="oldest" selected style="color: gray;">Oldest</option>
+                            <option value="newest">Newest</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="partition-combo" class="form-label mb-1">Partition:</label>
+                        <select id="partition-combo" class="form-select form-select-sm placeholder-gray" onclick="loadPartitionsForTopicOnClick()">
+                            <option value="" disabled selected style="color: gray;">Select Partition</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="getAllMessagesBtn" class="btn btn-primary" onclick="getAllMessages()">Get All Messages</button>
+
+                <div id="pageContent">
+                    <div id="noMessagesContainer" class="text-center mt-5" style="display: none; font-size: 0.9rem; color: black;">
+                        <!-- This will display the "No messages found" message -->
+                    </div>
+
+                    <div class="table-container" id="tableContainer">
+                        <table class="table" id="messagesTable" style="table-layout: fixed; width: 100%;">
+                            <thead>
+                            <tr>
+                                <th style="width: 3%;"></th>
+                                <th style="width: 8%;">Partition</th>
+                                <th style="width: 8%;">Offset</th>
+                                <th style="width: 15%;">Key</th>
+                                <th style="width: 50%;">Value</th>
+                                <th style="width: 20%;">Time</th>
+                            </tr>
+                            </thead>
+                            <tbody id="messagesBody">
+                            <!-- Messages will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="messageDetails" class="mt-3" style="display: none;">
+                        <ul class="nav nav-tabs" id="messageDetailsTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="partition-tab" data-bs-toggle="tab" href="#partition" role="tab" aria-controls="partition" aria-selected="true">Partition</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="offset-tab" data-bs-toggle="tab" href="#offset" role="tab" aria-controls="offset" aria-selected="false">Offset</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="key-tab" data-bs-toggle="tab" href="#key" role="tab" aria-controls="key" aria-selected="false">Key</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="value-tab" data-bs-toggle="tab" href="#value" role="tab" aria-controls="value" aria-selected="false">Value</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="time-tab" data-bs-toggle="tab" href="#time" role="tab" aria-controls="time" aria-selected="false">Time</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content bg-light p-3 rounded" id="messageDetailsContent">
+                            <div class="tab-pane fade show active" id="partition" role="tabpanel" aria-labelledby="partition-tab">
+                                <strong>Partition:</strong> <span id="detail-partition"></span>
+                            </div>
+                            <div class="tab-pane fade" id="offset" role="tabpanel" aria-labelledby="offset-tab">
+                                <strong>Offset:</strong> <span id="detail-offset"></span>
+                            </div>
+                            <div class="tab-pane fade" id="key" role="tabpanel" aria-labelledby="key-tab">
+                                <strong>Key:</strong> <span id="detail-key"></span>
+                            </div>
+                            <div class="tab-pane fade" id="value" role="tabpanel" aria-labelledby="value-tab">
+                                <strong>Value:</strong>
+                                <pre id="detail-value" class="bg-light p-3 rounded"></pre>
+                            </div>
+                            <div class="tab-pane fade" id="time" role="tabpanel" aria-labelledby="time-tab">
+                                <strong>Time:</strong> <span id="detail-timestamp"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- End of Data Tab -->
+
+            <!-- config tab-->
+            <!-- Config List -->
+            <div class="tab-pane fade" id="config" role="tabpanel">
+                <div id="notification" class="alert" role="alert" style="display: none;"></div>
+
+                <!-- Buttons for actions -->
+                <div class="d-flex mb-3">
+                    <button id="refreshConfigsBtn" class="btn btn-primary me-2" onclick="loadConfigs()" title="Refresh">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                    <button class="btn btn-success me-2" onclick="openAddConfigModal()" title="Add">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Table container with expanded height -->
+                <div class="table-responsive" style="height: 60vh; overflow-y: auto; border: 1px solid #ddd;">
+                    <table class="table table-bordered">
+                        <thead style="position: sticky; top: 0; background-color: #f8f9fa; z-index: 1;">
+                        <tr>
+                            <th style="width: 40%;">Config Key</th>
+                            <th style="width: 50%;">Config Value</th>
+                            <th style="width: 10%;">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="config-table-body" style="overflow-y: auto;">
+                        <!-- Config entries will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div class="modal fade" id="deleteConfigModal" tabindex="-1" aria-labelledby="deleteConfigModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteConfigModalLabel">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete the configuration: <strong id="configToDelete"></strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Add/Edit Config Modal -->
+            <div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="configModalLabel">Add/Edit Config</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="configForm">
+                                <div class="mb-3">
+                                    <label for="configName" class="form-label">Config Name</label>
+                                    <input type="text" class="form-control" id="configName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="configValue" class="form-label">Config Value</label>
+                                    <input type="text" class="form-control" id="configValue" required>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="configSaveBtn" onclick="saveConfig()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--partitions-->
+            <div class="tab-pane fade" id="partitions" role="tabpanel">
+                <h4>Partitions Management</h4>
+
+                <div class="row mt-3">
+                    <!-- Left Panel: Partitions List -->
+                    <div class="col-md-3">
+                        <ul class="list-group" id="partition-tabs">
+                            <!-- Dynamic Partition Tabs -->
+                        </ul>
+                    </div>
+
+                    <!-- Right Panel: Partition Details -->
+                    <div class="col-md-9">
+                        <div class="mt-3 table-responsive" id="partition-details">
+                            <div class="alert alert-info">Select a partition to see details.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal for Sending Messages -->
+            <div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="sendMessageModalLabel">Send Message</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="nav nav-tabs" id="sendMessageTabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#singleMessageTab">Single Message</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#multipleMessageTab">Multiple Messages</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-3">
+                                <!-- Single Message -->
+                                <div class="tab-pane fade show active" id="singleMessageTab">
+                                    <div class="mb-3">
+                                        <label for="singleMessageKey" class="form-label">Key</label>
+                                        <input type="text" class="form-control" id="singleMessageKey">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="singleMessageValue" class="form-label">Value</label>
+                                        <textarea class="form-control" id="singleMessageValue"></textarea>
+                                    </div>
+                                    <button class="btn btn-primary" onclick="sendSingleMessage()">Send</button>
+                                </div>
+                                <!-- Multiple Messages -->
+                                <div class="tab-pane fade" id="multipleMessageTab">
+                                    <div class="mb-3">
+                                        <label for="multipleMessagesInput" class="form-label">Messages (JSON Array)</label>
+                                        <textarea class="form-control" id="multipleMessagesInput"></textarea>
+                                    </div>
+                                    <button class="btn btn-primary" onclick="sendMultipleMessages()">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

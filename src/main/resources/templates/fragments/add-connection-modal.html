@@ -1,0 +1,40 @@
+<!-- addConnectionModal.html -->
+<div th:fragment="connectionModal">
+    <div class="modal fade" id="addConnectionModal" tabindex="-1" aria-labelledby="addConnectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addConnectionModalLabel">Add New Kafka Connection</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Loading Overlay -->
+                    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                        <img src="/icons/logo.svg" alt="Loading Icon" class="loading-svg">
+                    </div>
+                    <form id="newConnectionForm">
+                        <div class="mb-3">
+                            <label for="serverName" class="form-label">Server Name</label>
+                            <input type="text" class="form-control" id="serverName" name="serverName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="serverIP" class="form-label">Server IP</label>
+                            <input type="text" class="form-control" id="serverIP" name="serverIP" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="serverPort" class="form-label">Server Port</label>
+                            <input type="text" class="form-control" id="serverPort" name="serverPort" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitNewConnection()">Add Connection</button>
+                </div>
+                <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;">
+                    Couldn't connect to this server. Check if available.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+/* Messages Table */
+#messagesTable tbody tr {
+    height: 24px; /* Reduced height for smaller rows */
+    line-height: 24px; /* Adjusted line height to match the new height */
+}
+
+#messagesTable tbody td {
+    padding: 2px; /* Reduced padding for table cells */
+    font-size: 0.8rem; /* Reduced font size for better fit */
+}
+
+#messagesTable tbody tr:nth-child(odd) {
+    background-color: #f8f9fa; /* Keep alternating row colors */
+}
+
+#messagesTable tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Keep alternating row colors */
+}
+
+/* Message Detail */
+.view-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.3rem; /* Reduced padding for smaller touch targets */
+    cursor: pointer;
+    font-size: 0.75rem; /* Reduced font size */
+}
+
+.view-message i {
+    font-size: 0.8rem; /* Reduced icon size */
+}
+
+.view-message.active {
+    color: #007bff; /* Active state color */
+    background-color: #d1ecff; /* Active state background */
+    border-color: #007bff; /* Active state border */
+}
+
+#detail-value {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-y: auto;
+    max-height: 350px; /* Reduced max height for responsiveness */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #detail-value {
+        white-space: normal; /* Collapse whitespace on smaller screens */
+        word-wrap: break-word;
+        overflow-y: hidden; /* Disable vertical overflow */
+        max-height: none; /* Allow for full height on smaller screens */
+    }
+
+    .view-message {
+        padding: 0.05rem 0.2rem; /* Further reduce padding for smaller touch targets */
+        font-size: 0.65rem; /* Further reduced font size on small screens */
+    }
+
+    .view-message i {
+        font-size: 0.65rem; /* Further reduce icon size on small screens */
+    }
+}
+
+/*Get all messages style*/
+.blur {
+    filter: blur(5px); /* Adjust the blur intensity */
+    pointer-events: none; /* Prevent interaction with blurred content */
+    opacity: 0.5; /* Dim the content for better effect */
+}
+
+/*Refresh BTN style*/
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+button {/* Smooth transition for blur effect */
+}
+

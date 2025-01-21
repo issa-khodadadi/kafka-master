@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <title>Kafka Master</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/connect.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- Logo section -->
+    <div class="text-center" id="logo-container">
+        <img src="/icons/logo.svg" alt="Kafka Master Logo" style="width: 150px; height: auto;" id="logo">
+        <h2 id="app-name" class="text-center">Kafka Master</h2>
+    </div>
+
+    <div class="form-container">
+
+        <form id="kafkaConnectForm">
+            <div class="mb-3">
+                <label for="serverName" class="form-label">Server Name</label>
+                <input type="text" class="form-control" id="serverName" name="serverName" required>
+            </div>
+            <div class="mb-3">
+                <label for="serverIP" class="form-label">Server IP</label>
+                <input type="text" class="form-control" id="serverIP" name="serverIP" required>
+            </div>
+            <div class="mb-3">
+                <label for="serverPort" class="form-label">Server Port</label>
+                <input type="text" class="form-control" id="serverPort" name="serverPort" required>
+            </div>
+            <button id="connectButton" type="button" class="btn w-100" onclick="submitForm()">Connect</button>
+        </form>
+
+        <div id="errorMessage" class="alert" style="display: none;"></div>
+    </div>
+</div>
+
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <img src="/icons/logo.svg" alt="Loading Icon" class="loading-svg">
+</div>
+
+<script th:src="@{/js/connect.js}"></script>
+</body>
+</html>

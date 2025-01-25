@@ -1,4 +1,4 @@
-[![Kafka Master Logo](assets/logo.svg)](https://raw.githubusercontent.com/issa-khodadadi/kafka-master/refs/heads/main/src/main/resources/static/icons/logo.svg)
+[![Kafka Master Logo](assets/logo.svg)](https://github.com/issa-khodadadi/kafka-master/blob/main/src/main/resources/static/icons/logo.svg)
 
 # kafka-master
 this is a user interface to simplify kafka servers managemen.

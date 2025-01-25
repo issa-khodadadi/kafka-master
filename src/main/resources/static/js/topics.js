@@ -48,7 +48,7 @@ function fetchTopics(connectionName) {
         serverName: connectionName,
     };
 
-    fetch('/topics', {
+    fetch('/topics/getall', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -177,7 +177,7 @@ function loadConfigs() {
         serverName: connectionName,
     };
 
-    fetch(`/getallconfigs`, {
+    fetch(`/topics/getallconfigs`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -304,7 +304,7 @@ function saveConfig() {
         return;
     }
 
-    const endpoint = `/addoreditconfig`;
+    const endpoint = `/topics/addoreditconfig`;
     const payload = {
         topicName,
         serverName: connectionName, // Updated key to match the backend parameter
@@ -428,7 +428,7 @@ document.getElementById("confirmDeleteBtn").addEventListener("click", function (
         configName: configToDeleteName,
     };
 
-    fetch(`/delete`, {
+    fetch(`topics/deleteconfig`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -504,7 +504,7 @@ function loadPartitions() {
         serverName: connectionName,
     };
 
-    fetch('/partitions', {
+    fetch('/partitions/getall', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -555,7 +555,7 @@ function loadPartitionDetails(topicName, connectionName, partition) {
     };
 
     // Fetch partition details using the new API
-    fetch("/partition/details", {
+    fetch("/partitions/detail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload), // Send the payload as JSON

@@ -62,6 +62,10 @@ public class Validation {
     }
 
     public static boolean isValidIP(String ip) {
+        if (ip.equalsIgnoreCase("localhost")) {
+            return true;
+        }
+
         return ipPattern.matcher(ip).matches();
     }
 

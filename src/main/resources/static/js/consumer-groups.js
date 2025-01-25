@@ -64,7 +64,7 @@ function fetchConsumers(connectionName) {
         serverName: connectionName
     };
 
-    fetch("/consumers", {
+    fetch("/consumers/getall", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

@@ -1,4 +1,4 @@
-![Kafka Master Logo](assets/logo.svg)
+![Kafka Master Logo](logo.svg)
 
 # kafka-master
 this is a user interface to simplify kafka servers managemen.

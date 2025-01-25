@@ -1,6 +1,5 @@
-<div style="background-color:white; padding:10px; display:inline-block;">
-  <img src="logo.svg" alt="Kafka Master Logo">
-</div>
+<img src="logo.svg" alt="Kafka Master Logo" style="background-color:white; padding:10px; border-radius:8px;" width="200">
+
 # kafka-master
 this is a user interface to simplify kafka servers managemen.
 

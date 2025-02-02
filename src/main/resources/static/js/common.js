@@ -83,20 +83,3 @@ window.addEventListener("resize", adjustMessageDisplay);
 // Call the function on page load
 document.addEventListener("DOMContentLoaded", adjustMessageDisplay);
 
-function openAddTopicModal() {
-    // Reset the modal (clear input fields or reset values)
-    resetAddTopicModal();
-
-    // Update modal title
-    document.getElementById("addTopicModalLabel").textContent = "Add New Topic";
-
-    // Show the modal using Bootstrap's Modal API
-    const modal = new bootstrap.Modal(document.getElementById("addTopicModal"));
-    modal.show();
-}
-
-function resetAddTopicModal() {
-    // Reset the input fields in the modal
-    document.getElementById("topicNameInput").value = '';
-    document.getElementById("topicConfigInput").value = '';
-}

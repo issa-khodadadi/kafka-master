@@ -195,8 +195,3 @@ body.loading {
 .gray-option {
     color: gray !important;
 }
-
-
-#addTopicModal {
-    display: block !important;
-}

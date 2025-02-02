@@ -4,6 +4,7 @@ import com.issa.kafka.master.dto.filters.ConfigDeletionFilter;
 import com.issa.kafka.master.dto.filters.ServerNameFilter;
 import com.issa.kafka.master.dto.forms.AddEditConfigForm;
 import com.issa.kafka.master.dto.forms.BaseTopicForm;
+import com.issa.kafka.master.dto.forms.CreateTopicForm;
 import com.issa.kafka.master.enums.ServiceResultStatus;
 import com.issa.kafka.master.services.KafkaService;
 import com.issa.kafka.master.services.TopicService;
@@ -115,6 +116,26 @@ public class TopicController {
                             configDeletionFilter.getServerName(), configDeletionFilter.getConfigName());
 
             return ResponseEntity.ok(deleteConfigResponseResult);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
+        }
+    }
+
+    // add topic
+    @PostMapping("/add")
+    public ResponseEntity<ResponseResult> createTopic(@RequestBody CreateTopicForm topicRequest) {
+        try {
+            if (topicRequest.isRequiredFieldsNotFilled()) {
+                return ResponseEntity.ok(
+                        new ResponseResult(
+                                ServiceResultStatus.FIELDS_REQUIRED,
+                                false));
+            }
+
+            ResponseResult createTopicResponseResult =
+                    topicService.createTopic(topicRequest);
+
+            return ResponseEntity.ok(createTopicResponseResult);
         } catch (Exception e) {
             return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
         }

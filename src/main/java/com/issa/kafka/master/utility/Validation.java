@@ -26,7 +26,7 @@ public class Validation {
 
 
     // VALIDATION METHODS
-    public static boolean isMoreThanMinLength(String key, long length) {
+    public static boolean isMoreThanSelectedLength(String key, long length) {
         if (key == null) {
             return true;
         } else {
@@ -88,121 +88,92 @@ public class Validation {
     public static boolean isValidConfigKey(String configKey) {
         List<String> validKeys = Arrays.asList(
                 // Log cleanup and compaction settings
-                "cleanup.policy",           // Determines log compaction or deletion
-                "delete.retention.ms",      // Time to retain deleted records
-                "max.compaction.lag.ms",    // Maximum delay for compaction
-                "min.compaction.lag.ms",    // Minimum delay for compaction
-                "segment.ms",               // Time before creating a new log segment
-                "segment.bytes",            // Size of each log segment in bytes
-                "segment.jitter.ms",        // Jitter for log segment rolling
-                "retention.ms",             // Time to retain log records
-                "retention.bytes",          // Maximum size of the log before deletion
-                "file.delete.delay.ms",     // Delay before deleting a log file
+                "cleanup.policy", "delete.retention.ms", "max.compaction.lag.ms",
+                "min.compaction.lag.ms", "segment.ms", "segment.bytes", "segment.jitter.ms",
+                "retention.ms", "retention.bytes", "file.delete.delay.ms",
 
                 // Compression settings
-                "compression.type",         // Compression type for topic data
+                "compression.type",
 
                 // Message handling and size
-                "max.message.bytes",        // Maximum size of a single message
-                "message.timestamp.type",   // Type of timestamp used in messages
-                "message.timestamp.difference.max.ms", // Maximum allowable difference for timestamps
-                "message.format.version",   // Message format version
-                "message.downconversion.enable", // Enable or disable message down-conversion
+                "max.message.bytes", "message.timestamp.type", "message.timestamp.difference.max.ms",
+                "message.format.version", "message.downconversion.enable",
 
                 // Flush settings
-                "flush.messages",           // Number of messages to flush to disk
-                "flush.ms",                 // Maximum time before flushing data
+                "flush.messages", "flush.ms",
 
                 // Replica settings
-                "min.insync.replicas",      // Minimum in-sync replicas for writes
-                "unclean.leader.election.enable", // Allow unclean leader election
-                "follower.replication.throttled.replicas", // Throttle replication for followers
-                "leader.replication.throttled.replicas",   // Throttle replication for leaders
+                "min.insync.replicas", "unclean.leader.election.enable",
+                "follower.replication.throttled.replicas", "leader.replication.throttled.replicas",
 
                 // Quotas and throttling
-                "quota.consumer.default",   // Default consumer quota
-                "quota.producer.default",   // Default producer quota
+                "quota.consumer.default", "quota.producer.default",
 
                 // Log index and cache settings
-                "log.index.interval.bytes", // Interval for indexing log entries
-                "log.index.size.max.bytes", // Maximum size of the index
-                "log.segment.delete.delay.ms", // Delay before deleting a log segment
-                "log.roll.ms",              // Time before rolling the log
-                "log.roll.jitter.ms",       // Jitter for log rolling
+                "log.index.interval.bytes", "log.index.size.max.bytes", "log.segment.delete.delay.ms",
+                "log.roll.ms", "log.roll.jitter.ms", "segment.index.bytes", // Added segment.index.bytes
 
                 // General configuration
-                "preallocate",              // Preallocate disk space for log segments
-                "delete.retention.bytes",   // Retention size for deleted records
+                "preallocate", "delete.retention.bytes",
 
                 // Cleanup and other policies
-                "log.cleaner.enable",       // Enable the log cleaner
-                "log.cleaner.min.compaction.lag.ms", // Minimum compaction lag
-                "log.cleaner.threads",      // Number of log cleaner threads
-                "log.retention.check.interval.ms", // Interval to check retention
+                "log.cleaner.enable", "log.cleaner.min.compaction.lag.ms", "log.cleaner.threads",
+                "log.retention.check.interval.ms",
 
-                // Tiered storage settings (if supported in your Kafka version)
-                "remote.log.storage.enable",   // Enable remote log storage
-                "remote.log.segment.bytes",   // Size of remote log segments
-                "remote.log.retention.ms",    // Retention time for remote logs
+                // Tiered storage settings
+                "remote.log.storage.enable", "remote.log.segment.bytes", "remote.log.retention.ms",
 
-                // Add more keys if required based on specific use cases
-                "index.interval.bytes",      // Interval for indexing records
-                "delete.topic.enable",       // Allow topics to be deleted
-                "auto.create.topics.enable"  // Allow automatic topic creation
+                // Additional settings
+                "index.interval.bytes", "delete.topic.enable", "auto.create.topics.enable"
         );
+
         return validKeys.contains(configKey);
     }
 
+
     // value validation
     public static boolean isValidConfigValue(String configKey, String configValue) {
-        // Validate the configuration value based on the key
         try {
             return switch (configKey) {
                 case "cleanup.policy" ->
-                    // Valid values: "delete" or "compact"
                         configValue.equals("delete") || configValue.equals("compact");
+
                 case "compression.type" ->
-                    // Valid values: Compression algorithms supported by Kafka
-                        Arrays.asList("gzip", "snappy", "lz4", "zstd", "uncompressed").contains(configValue);
+                        Arrays.asList("gzip", "snappy", "lz4", "zstd", "uncompressed", "producer").contains(configValue);
+
                 case "delete.retention.ms", "retention.ms", "file.delete.delay.ms", "log.retention.check.interval.ms",
                      "log.segment.delete.delay.ms", "segment.jitter.ms" ->
-                    // Value should be a non-negative long
                         Long.parseLong(configValue) >= 0;
-                case "flush.messages" ->
-                    // Value should be a positive long
-                        Long.parseLong(configValue) > 0;
-                case "min.insync.replicas", "max.message.bytes", "segment.bytes", "log.index.interval.bytes",
-                     "log.index.size.max.bytes", "remote.log.segment.bytes" ->
-                    // Value should be a positive integer
+
+                case "flush.messages", "min.insync.replicas", "max.message.bytes", "segment.bytes",
+                     "log.index.interval.bytes", "log.index.size.max.bytes", "remote.log.segment.bytes",
+                     "segment.index.bytes" -> // Added validation for segment.index.bytes
                         Integer.parseInt(configValue) > 0;
+
                 case "segment.ms" ->
-                    // Value should be a non-negative long (time in milliseconds)
                         Long.parseLong(configValue) >= 0;
+
                 case "message.timestamp.type" ->
-                    // Valid values: "CreateTime" or "LogAppendTime"
                         configValue.equals("CreateTime") || configValue.equals("LogAppendTime");
-                case "log.cleaner.enable", "unclean.leader.election.enable", "preallocate", "remote.log.storage.enable",
-                     "auto.create.topics.enable", "delete.topic.enable", "message.downconversion.enable" ->
-                    // Valid values: "true" or "false"
+
+                case "log.cleaner.enable", "unclean.leader.election.enable", "preallocate",
+                     "remote.log.storage.enable", "auto.create.topics.enable", "delete.topic.enable",
+                     "message.downconversion.enable" ->
                         configValue.equals("true") || configValue.equals("false");
+
                 case "message.format.version" ->
-                    // Value should match valid Kafka versions (e.g., "2.8", "3.0")
-                        configValue.matches("\\d+\\.\\d+"); // Regex for version format like "2.8"
+                        configValue.matches("\\d+\\.\\d+"); // Kafka version format like "2.8", "3.0"
 
                 case "quota.producer.default", "quota.consumer.default" ->
-                    // Value should be a non-negative double
                         Double.parseDouble(configValue) >= 0;
-                case "leader.replication.throttled.replicas", "follower.replication.throttled.replicas" ->
-                    // Value should be a comma-separated list of replica IDs (e.g., "1,2,3")
-                        configValue.matches("^\\d+(,\\d+)*$"); // Regex for IDs like "1,2,3"
 
-                default ->
-                    // Default case for keys with no specific validation logic
-                        true;
+                case "leader.replication.throttled.replicas", "follower.replication.throttled.replicas" ->
+                        configValue.matches("^\\d+(,\\d+)*$"); // Comma-separated replica IDs
+
+                default -> true; // Default case for unvalidated keys
             };
         } catch (NumberFormatException e) {
-            // If parsing fails, the value is invalid
-            return false;
+            return false; // Return false if number parsing fails
         }
     }
 }

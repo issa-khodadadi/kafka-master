@@ -156,3 +156,94 @@ select.form-select-sm:focus option {
     max-height: 500px;
     overflow-y: auto; /* Scrollable list if many partitions */
 }
+
+/* Modal Styling */
+#addTopicModal .modal-content {
+    border-radius: 8px;
+}
+
+#addTopicModal .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#addTopicModal .modal-footer {
+    border-top: 1px solid #dee2e6;
+}
+
+/* Table Styling */
+#addTopicModal .table th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+#addTopicModal .table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Reduce table row height */
+#addTopicModal .table th,
+#addTopicModal .table td {
+    padding: 4px; /* Reduce padding */
+    font-size: 14px; /* Smaller text */
+}
+
+/* Reduce height of input fields */
+#addTopicModal .table input {
+    height: 28px;
+    font-size: 13px;
+    padding: 2px 5px;
+}
+
+/* Fixed width for the remove (-) column */
+#addTopicModal .table th:first-child,
+#addTopicModal .table td:first-child {
+    width: 50px; /* Fixed width */
+    min-width: 50px; /* Prevents resizing */
+    max-width: 50px;
+    text-align: center;
+}
+
+/* Circular "Load More" button */
+#loadMoreConfigsButton {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+/* Ensures remove button does not change width */
+.fixed-width {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+}
+
+/* Hidden configurations container */
+.hidden-configs {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+}
+
+/* Expanded state */
+.hidden-configs.expanded {
+    max-height: 500px;
+    transition: max-height 0.5s ease-in;
+}
+
+/* Smooth modal expansion */
+.modal-md {
+    max-width: 500px;
+}
+
+.modal-lg {
+    max-width: 800px;
+    transition: max-width 0.3s ease;
+}

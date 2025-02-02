@@ -1,0 +1,194 @@
+<!-- Add Topic Modal -->
+<div th:fragment="addTopicModal">
+    <div class="modal fade" id="addTopicModal" tabindex="-1" aria-labelledby="addTopicModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md"> <!-- Starts small -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTopicModalLabel">Add New Topic</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Topic Name, Partitions, and Replicas -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="topicNameInput" class="form-label">Topic Name</label>
+                            <input type="text" class="form-control" id="topicNameInput" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="partitionsInput" class="form-label">Partitions</label>
+                            <input type="number" class="form-control" id="partitionsInput" value="1" min="1" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="replicasInput" class="form-label">Replicas</label>
+                            <input type="number" class="form-control" id="replicasInput" value="1" min="1" required>
+                        </div>
+                    </div>
+
+                    <!-- Configurations Section -->
+                    <!-- Configurations Section -->
+                    <div class="mb-3">
+                        <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">Topic Configurations</h6>
+                            <button class="btn btn-outline-success btn-sm" onclick="addCustomConfig()" title="Add">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+
+                        <div class="table-responsive_2">
+                            <table class="table table-sm table-bordered">
+                                <thead class="table-light">
+                                <tr>
+                                    <th class="fixed-width">Action</th>
+                                    <th>Configuration</th>
+                                    <th>Value</th>
+                                </tr>
+                                </thead>
+                                <tbody id="configTableBody">
+                                <tr>
+                                    <td class="text-center fixed-width">
+                                        <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                    </td>
+                                    <td>cleanup.policy</td>
+                                    <td><input type="text" class="form-control" value="delete"></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center fixed-width">
+                                        <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                    </td>
+                                    <td>retention.ms</td>
+                                    <td><input type="text" class="form-control" value="604800000"></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center fixed-width">
+                                        <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                    </td>
+                                    <td>min.insync.replicas</td>
+                                    <td><input type="text" class="form-control" value="1"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Hidden configurations container -->
+                        <div id="hiddenConfigs" class="hidden-configs">
+                            <div class="table-responsive_2">
+                                <table class="table table-sm table-bordered">
+                                    <tbody id="configTableBodyHidden">
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>compression.type</td>
+                                        <td><input type="text" class="form-control" value="producer"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>segment.bytes</td>
+                                        <td><input type="text" class="form-control" value="1073741824"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>message.downconversion.enable</td>
+                                        <td><input type="text" class="form-control" value="true"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>flush.ms</td>
+                                        <td><input type="text" class="form-control" value="9223372036854775807"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>max.message.bytes</td>
+                                        <td><input type="text" class="form-control" value="1048588"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>unclean.leader.election.enable</td>
+                                        <td><input type="text" class="form-control" value="false"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>retention.bytes</td>
+                                        <td><input type="text" class="form-control" value="-1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>delete.retention.ms</td>
+                                        <td><input type="text" class="form-control" value="86400000"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>segment.ms</td>
+                                        <td><input type="text" class="form-control" value="604800000"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="removeConfig(this)">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                        </td>
+                                        <td>segment.index.bytes</td>
+                                        <td><input type="text" class="form-control" value="10485760"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Button to expand configurations -->
+                        <div class="text-center mt-3">
+                            <button id="loadMoreConfigsButton" class="btn btn-outline-primary btn-sm" onclick="toggleConfigs()">
+                                <i class="bi bi-chevron-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addTopic()">Save Topic</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

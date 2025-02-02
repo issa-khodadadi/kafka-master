@@ -1,17 +1,17 @@
 package com.issa.kafka.master.services;
 
 import com.issa.kafka.master.dto.forms.AddEditConfigForm;
+import com.issa.kafka.master.dto.forms.CreateTopicForm;
 import com.issa.kafka.master.enums.ServiceResultStatus;
 import com.issa.kafka.master.utility.ResponseResult;
 import com.issa.kafka.master.utility.Validation;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.Config;
-import org.apache.kafka.clients.admin.ConfigEntry;
+import org.apache.kafka.clients.admin.*;
+import org.apache.kafka.common.KafkaFuture;
 import org.apache.kafka.common.config.ConfigResource;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -175,5 +175,69 @@ public class TopicService {
         }
     }
 
+    // Create Kafka topic
+    public ResponseResult createTopic(CreateTopicForm createTopicForm) {
+        ResponseResult validateCreateTopicFormResponseResult = this.validateCreateTopicForm(createTopicForm);
+        if (!validateCreateTopicFormResponseResult.getIsSuccessful()) {
+            return validateCreateTopicFormResponseResult;
+        }
 
+        Properties properties = new Properties();
+        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, createTopicForm.getServerName());
+
+        try (AdminClient adminClient = AdminClient.create(properties)) {
+            List<String> topics = adminClient.listTopics().names().get().stream().toList();
+            String topicName = createTopicForm.getTopicName();
+            // Check if the topic name exists in the list
+            if (topics.contains(topicName)) {
+                return new ResponseResult(ServiceResultStatus.TOPIC_NAME_DUPLICATE, false);
+            }
+
+            NewTopic newTopic = new NewTopic(createTopicForm.getTopicName(), createTopicForm.getPartitions(), (short) createTopicForm.getReplicas())
+                    .configs(createTopicForm.getConfigurations());
+
+            CreateTopicsResult result = adminClient.createTopics(Collections.singleton(newTopic));
+            KafkaFuture<Void> future = result.values().get(createTopicForm.getTopicName());
+
+            // Wait for topic creation
+            future.get();
+            return new ResponseResult(ServiceResultStatus.DONE, true);
+
+        } catch (InterruptedException | ExecutionException e) {
+            return new ResponseResult(
+                    ServiceResultStatus.FAIL_TO_CREATE_TOPIC,
+                    false
+            );
+        }
+    }
+
+    // validate create topic form
+    private ResponseResult validateCreateTopicForm(CreateTopicForm createTopicForm) {
+        if (Validation.isMoreThanSelectedLength(createTopicForm.getTopicName(), 50)) {
+            return new ResponseResult(ServiceResultStatus.TOPIC_NAME_LENGTH_IS_OVERFLOW, false);
+        }
+        if (createTopicForm.getPartitions() > 1000) {
+            return new ResponseResult(ServiceResultStatus.INVALID_PARTITION_COUNT, false);
+        }
+        if (createTopicForm.getReplicas() > 10) {
+            return new ResponseResult(ServiceResultStatus.INVALID_REPLICA_COUNT, false);
+        }
+
+        for(Map.Entry<String, String> entry : createTopicForm.getConfigurations().entrySet()) {
+            if (!Validation.isValidConfigKey(entry.getKey())) {
+                return new ResponseResult(
+                        ServiceResultStatus.INVALID_CONFIG_KEY,
+                        false
+                );
+            }
+            if (!Validation.isValidConfigValue(entry.getKey(), entry.getValue())) {
+                return new ResponseResult(
+                        ServiceResultStatus.INVALID_CONFIG_VALUE,
+                        false
+                );
+            }
+        }
+
+        return new ResponseResult(ServiceResultStatus.DONE, true);
+    }
 }

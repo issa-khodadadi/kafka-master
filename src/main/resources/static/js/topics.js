@@ -85,6 +85,7 @@ function fetchTopics(connectionName) {
 
                     // Add click event to fetch messages and highlight the selected button
                     button.addEventListener('click', () => {
+                        handleTopicSelection(topic);
                         // Remove the active state from all buttons
                         document.querySelectorAll(`#topicsList-${connectionName} .btn`).forEach(btn => {
                             btn.classList.remove('active');
@@ -122,6 +123,7 @@ function fetchTopics(connectionName) {
 }
 
 function refreshTopics() {
+    deleteTopicBtn.disabled=true;
     const connectionName = getSelectedConnectionName();
     fetchTopics(connectionName);
 }
@@ -721,21 +723,6 @@ function resetForms() {
     document.getElementById("multipleMessagesInput").value = "";
 }
 
-
-let selectedServerAddress = null;
-
-function setSelectedServerAddress(serverAddress) {
-    selectedServerAddress = serverAddress;
-}
-
-function getSelectedServerAddress() {
-    if (!selectedServerAddress) {
-        alert("Please select a connection.");
-        return null;
-    }
-    return selectedServerAddress;
-}
-
 // Function to load more configurations
 // Function to toggle hidden configurations
 // Function to toggle hidden configurations
@@ -790,10 +777,7 @@ function resetAddTopicModal() {
 }
 
 // Function to open the modal
-function openAddTopicModal(button) {
-    const serverAddress = button.getAttribute("data-server-address");
-    setSelectedServerAddress(serverAddress);
-
+function openAddTopicModal() {
     // Reset all fields to default values when opening the modal
     resetAddTopicModal();
 
@@ -804,7 +788,6 @@ function openAddTopicModal(button) {
     const modal = new bootstrap.Modal(document.getElementById("addTopicModal"));
     modal.show();
 }
-
 
 // Function to toggle hidden configurations
 function toggleConfigs() {
@@ -849,89 +832,7 @@ function removeConfig(button) {
     button.closest("tr").remove();
 }
 
-
 // Add topic
-/*function addTopic() {
-    // Get input values from the modal
-    const topicNameInput = document.getElementById("topicNameInput");
-    const partitionsInput = document.getElementById("partitionsInput");
-    const replicasInput = document.getElementById("replicasInput");
-    const modalBody = document.querySelector("#addTopicModal .modal-body");
-
-    const topicName = topicNameInput.value.trim();
-    const partitions = parseInt(partitionsInput.value);
-    const replicas = parseInt(replicasInput.value);
-
-    let hasError = false;
-
-    // Reset error styles and remove previous error messages
-    topicNameInput.style.border = "";
-    partitionsInput.style.border = "";
-    replicasInput.style.border = "";
-    const existingError = modalBody.querySelector(".error-message");
-    if (existingError) existingError.remove();
-
-    // Get configurations from both visible and hidden config tables
-    const configTableBody = document.querySelectorAll("#configTableBody tr, #configTableBodyHidden tr");
-    const configurations = {};
-
-    configTableBody.forEach(row => {
-        const keyElement = row.children[1]; // 2nd column = Configuration Key
-        const valueElement = row.children[2].querySelector("input");
-
-        if (keyElement && valueElement) {
-            const key = keyElement.textContent.trim();
-            const value = valueElement.value.trim();
-            if (key && value) {
-                configurations[key] = value;
-            }
-        }
-    });
-
-    // Construct the payload
-    const payload = {
-        serverName: getSelectedServerAddress(),
-        topicName: topicName,
-        partitions: partitions,
-        replicas: replicas,
-        configurations: configurations
-    };
-
-    // Define the API endpoint
-    const endpoint = "/topics/add";
-
-    // Send the request to the backend
-    fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) {
-                throw new Error(data.message || "Failed to create topic.");
-            }
-
-            // Refresh the page or topic list after successful creation
-            fetchTopics(getSelectedConnectionName());
-
-            // Close the modal on success
-            const addTopicModal = bootstrap.Modal.getInstance(document.getElementById("addTopicModal"));
-            if (addTopicModal) {
-                addTopicModal.hide();
-            }
-
-
-        })
-        .catch(error => {
-            console.error("Error creating topic:", error);
-            const errorDiv = document.createElement("div");
-            errorDiv.className = "error-message text-danger mt-2";
-            errorDiv.textContent = error.message || "Failed to create topic. Check the console for details.";
-            modalBody.appendChild(errorDiv);
-        });
-}*/
-// Add topic function with loading spinner and auto-refresh
 function addTopic() {
     // Get input values from the modal
     const topicNameInput = document.getElementById("topicNameInput");
@@ -972,7 +873,7 @@ function addTopic() {
 
     // Construct the payload
     const payload = {
-        serverName: getSelectedServerAddress(),
+        serverName: getSelectedConnectionName(),
         topicName: topicName,
         partitions: partitions,
         replicas: replicas,
@@ -1014,7 +915,7 @@ function addTopic() {
             console.error("Error creating topic:", error);
             const errorDiv = document.createElement("div");
             errorDiv.className = "error-message text-danger mt-2";
-            errorDiv.textContent = error.message || "Failed to create topic. Check the console for details.";
+            errorDiv.textContent = error.message || "Failed to create topic.";
             modalBody.appendChild(errorDiv);
         })
         .finally(() => {
@@ -1037,3 +938,129 @@ function showAddTopicNotification(message, type = "info") {
         alertDiv.remove();
     }, 4000); // Auto-remove after 4 seconds
 }
+
+// delete topic
+const deleteTopicBtn = document.getElementById("deleteTopicBtn");
+
+// Function to handle topic selection
+function handleTopicSelection(topicName) {
+    deleteTopicBtn.disabled = false;
+    deleteTopicBtn.setAttribute("data-topic-name", topicName);
+}
+
+deleteTopicBtn.addEventListener("click", function () {
+    const topicName = deleteTopicBtn.getAttribute("data-topic-name");
+
+    if (!topicName) {
+        alert("No topic selected.");
+        return;
+    }
+
+    // Set topic name in the delete modal
+    document.getElementById("topicToDelete").textContent = topicName;
+});
+
+// Function to delete a topic
+document.addEventListener("DOMContentLoaded", function () {
+    const deleteTopicBtn = document.getElementById("deleteTopicBtn");
+    let selectedTopic = "";
+
+    // Enable delete button when a topic is selected
+    function handleTopicSelection(topicName) {
+        selectedTopic = topicName;
+        deleteTopicBtn.disabled = false;
+        deleteTopicBtn.setAttribute("data-topic-name", topicName);
+    }
+
+    // Show topic name in delete confirmation modal
+    deleteTopicBtn.addEventListener("click", function () {
+        const topicName = deleteTopicBtn.getAttribute("data-topic-name");
+
+        if (!topicName) {
+            alert("No topic selected.");
+            return;
+        }
+
+        // Set topic name in delete modal
+        document.getElementById("topicToDelete").textContent = topicName;
+    });
+
+    // Handle delete confirmation
+    document.getElementById("confirmDeleteTopicBtn").addEventListener("click", function () {
+        const topicName = deleteTopicBtn.getAttribute("data-topic-name");
+        if (!topicName) {
+            alert("No topic selected.");
+            return;
+        }
+
+        // Perform the delete operation
+        deleteTopic(topicName);
+    });
+
+    // Function to delete a topic
+    function deleteTopic(topicName) {
+        const modalBody = document.querySelector("#deleteTopicModal .modal-body");
+        const connectionName = getSelectedConnectionName();
+
+        // Remove any existing error messages
+        const existingError = modalBody.querySelector(".error-message");
+        if (existingError) existingError.remove();
+
+        if (!connectionName) {
+            alert("Please select a connection.");
+            return;
+        }
+
+        const payload = {
+            topicName: topicName,
+            serverName: connectionName,
+        };
+
+        fetch("/topics/delete", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data.isSuccessful) {
+                    throw new Error(data.message || "Failed to delete topic.");
+                }
+
+                // Show success message
+                showAddTopicNotification(`Topic "${topicName}" deleted successfully.`);
+
+                // Refresh topics list
+                refreshTopics(connectionName);
+
+                // Disable delete button after deletion
+                deleteTopicBtn.disabled = true;
+
+                // Close modal only on success
+                const deleteTopicModal = bootstrap.Modal.getInstance(document.getElementById("deleteTopicModal"));
+                deleteTopicModal.hide();
+            })
+            .catch((error) => {
+                console.error("Error deleting topic:", error);
+
+                // Show error inside the modal (do not close it)
+                const errorDiv = document.createElement("div");
+                errorDiv.className = "error-message text-danger mt-2";
+                errorDiv.textContent = error.message || "Failed to delete topic.";
+                modalBody.appendChild(errorDiv);
+            });
+    }
+
+    // Attach click event to each topic in the list
+    document.querySelectorAll(".list-group").forEach(list => {
+        list.addEventListener("click", function (event) {
+            const clickedTopic = event.target.closest("li");
+            if (clickedTopic) {
+                handleTopicSelection(clickedTopic.textContent.trim());
+            }
+        });
+    });
+});
+

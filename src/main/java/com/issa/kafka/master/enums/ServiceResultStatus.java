@@ -24,6 +24,7 @@ public enum ServiceResultStatus {
     INVALID_PARTITION_COUNT,
     INVALID_REPLICA_COUNT,
     TOPIC_NAME_DUPLICATE,
+    FAIL_TO_DELETE_TOPIC,
 
 
 

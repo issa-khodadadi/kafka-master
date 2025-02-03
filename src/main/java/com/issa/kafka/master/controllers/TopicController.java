@@ -2,6 +2,7 @@ package com.issa.kafka.master.controllers;
 
 import com.issa.kafka.master.dto.filters.ConfigDeletionFilter;
 import com.issa.kafka.master.dto.filters.ServerNameFilter;
+import com.issa.kafka.master.dto.filters.TopicServerNameFilter;
 import com.issa.kafka.master.dto.forms.AddEditConfigForm;
 import com.issa.kafka.master.dto.forms.BaseTopicForm;
 import com.issa.kafka.master.dto.forms.CreateTopicForm;
@@ -138,6 +139,25 @@ public class TopicController {
             return ResponseEntity.ok(createTopicResponseResult);
         } catch (Exception e) {
             return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
+        }
+    }
+
+    // delete topic
+    @PostMapping("/delete")
+    public ResponseEntity<ResponseResult> deleteTopic(@RequestBody TopicServerNameFilter deleteTopicFilter) {
+        try {
+            if (deleteTopicFilter.isRequiredFieldsNotFilled()) {
+                return ResponseEntity.ok(
+                        new ResponseResult(
+                                ServiceResultStatus.FIELDS_REQUIRED,
+                                false));
+            }
+
+            ResponseResult response = topicService.deleteTopic(deleteTopicFilter.getTopicName(), deleteTopicFilter.getServerName());
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false, e.getMessage()));
         }
     }
 }

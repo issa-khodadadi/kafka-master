@@ -45,20 +45,14 @@
                                         </button>
 
                                         <!-- Add Topic Button -->
-                                        <!--<button class="btn btn-success me-2" onclick="openAddTopicModal()" title="Add">
-                                            <i class="bi bi-plus-circle"></i>
-                                        </button>-->
-
                                         <button class="btn btn-success me-2"
-                                                th:data-server-address="${server.serverIP} + ':' + ${server.serverPort}"
-                                                onclick="openAddTopicModal(this)"
+                                                onclick="openAddTopicModal()"
                                                 title="Add">
                                             <i class="bi bi-plus-circle"></i>
                                         </button>
 
-
-
-                                        <button id="deleteTopicBtn" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTopicModal">
+                                        <!-- Delete Topic Button -->
+                                        <button id="deleteTopicBtn" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTopicModal" disabled>
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>

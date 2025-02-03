@@ -182,10 +182,14 @@ public class TopicService {
             return validateCreateTopicFormResponseResult;
         }
 
-        Properties properties = new Properties();
-        properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, createTopicForm.getServerName());
+        try {
+            ResponseResult adminClientResponseResult = kafkaService.getAdminClient(createTopicForm.getServerName());
+            if (!adminClientResponseResult.getIsSuccessful()) {
+                return adminClientResponseResult;
+            }
 
-        try (AdminClient adminClient = AdminClient.create(properties)) {
+            AdminClient adminClient = (AdminClient) adminClientResponseResult.getResult();
+
             List<String> topics = adminClient.listTopics().names().get().stream().toList();
             String topicName = createTopicForm.getTopicName();
             // Check if the topic name exists in the list
@@ -239,5 +243,24 @@ public class TopicService {
         }
 
         return new ResponseResult(ServiceResultStatus.DONE, true);
+    }
+
+    // delete topic
+    public ResponseResult deleteTopic(String topicName, String connectionName) {
+        try {
+            ResponseResult adminClientResponseResult = kafkaService.getAdminClient(connectionName);
+            if (!adminClientResponseResult.getIsSuccessful()) {
+                return adminClientResponseResult;
+            }
+
+            AdminClient adminClient = (AdminClient) adminClientResponseResult.getResult();
+
+            DeleteTopicsResult deleteTopicsResult = adminClient.deleteTopics(Collections.singleton(topicName));
+
+            deleteTopicsResult.all().get();
+            return new ResponseResult(ServiceResultStatus.DONE, true);
+        } catch (InterruptedException | ExecutionException e) {
+            return new ResponseResult(ServiceResultStatus.FAIL_TO_DELETE_TOPIC, false);
+        }
     }
 }

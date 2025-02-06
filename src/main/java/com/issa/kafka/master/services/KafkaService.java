@@ -111,7 +111,7 @@ public class KafkaService {
             return validationResult;
         }
 
-        KafkaConnectionHolderForm kafkaConnectionHolderForm = new KafkaConnectionHolderForm(form.getServerName(), form.getServerIP(), form.getServerPort());
+        KafkaConnectionHolderForm kafkaConnectionHolderForm = new KafkaConnectionHolderForm(form.getServerName(), form.getServerIP(), form.getServerPort(), true);
 
         if (isServerNameExists(kafkaConnectionHolderForm.getServerName())) {
             return new ResponseResult(ServiceResultStatus.SERVER_NAME_DUPLICATE, false);
@@ -157,5 +157,47 @@ public class KafkaService {
     private boolean isServerIdExists(String serverIp, String serverPort) {
         return connections.values().stream()
                 .anyMatch(connection -> connection.getServerIP().equals(serverIp) && connection.getServerPort().equals(serverPort));
+    }
+
+    // disconnect, reconnect
+    // Disconnect a Kafka Server
+    public ResponseResult disconnectServer(String serverName) {
+        if (!clients.containsKey(serverName)) {
+            return new ResponseResult(ServiceResultStatus.NO_CLIENT_FOUND, false, "No active connection found.");
+        }
+
+        KafkaConnectionHolderForm connectionForm = connections.get(serverName);
+        connectionForm.setIsConnected(false);
+
+        try {
+            AdminClient client = clients.remove(serverName); // Remove from active clients
+            if (client != null) {
+                client.close(); // Properly close the Kafka connection
+            }
+            return new ResponseResult(ServiceResultStatus.DONE, true);
+        } catch (Exception e) {
+            return new ResponseResult(ServiceResultStatus.ERROR, false);
+        }
+    }
+
+    // Reconnect to a Kafka Server
+    public ResponseResult reconnectServer(String serverName) {
+        if (!connections.containsKey(serverName)) {
+            return new ResponseResult(ServiceResultStatus.NO_CLIENT_FOUND, false);
+        }
+
+        try {
+            KafkaConnectionHolderForm connectionDetails = connections.get(serverName);
+            AdminClient newClient = createAdminClient(connectionDetails.getServerIP(), connectionDetails.getServerPort());
+
+            // Validate the new connection
+            newClient.listTopics().names().get(3, TimeUnit.SECONDS);
+
+            clients.put(serverName, newClient); // Store new connection
+
+            return new ResponseResult(ServiceResultStatus.DONE, true);
+        } catch (Exception e) {
+            return new ResponseResult(ServiceResultStatus.ERROR, false);
+        }
     }
 }

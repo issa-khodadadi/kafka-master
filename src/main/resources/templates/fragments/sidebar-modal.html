@@ -1,6 +1,7 @@
 <!-- Sidebar Fragment -->
 <div class="col-md-3 sidebar" th:fragment="sidebar">
-    <button id="connectButton" class="btn btn-primary w-100 mb-4" data-bs-toggle="modal" data-bs-target="#addConnectionModal">Add new Connection</button>
+    <button id="connectButton" class="btn btn-primary w-100 mb-4"
+            data-bs-toggle="modal" data-bs-target="#addConnectionModal">Add new Connection</button>
 
     <!-- Accordion for Kafka connections -->
     <div class="accordion" id="kafkaAccordion">
@@ -18,9 +19,35 @@
             <div th:id="'collapse-' + ${server.serverName}" class="accordion-collapse collapse"
                  th:attr="aria-labelledby='heading-' + ${server.serverName}">
                 <div class="accordion-body">
-                    <strong>
-                        <span th:text="${server.serverIP} + ':' + ${server.serverPort}">serverIP:port</span>
-                    </strong>
+
+                    <!-- Server IP & Port with Disconnect/Reconnect Buttons -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>
+                            <span th:text="${server.serverIP} + ':' + ${server.serverPort}">serverIP:port</span>
+                        </strong>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <!-- Disconnect Button -->
+                                <button class="btn btn-danger btn-sm"
+                                        th:id="'disconnect-' + ${server.serverName}"
+                                        th:attr="onclick='showDisconnectModal(\'' + ${server.serverName} + '\')'"
+                                        th:disabled="${!server.isConnected}"
+                                        title="Disconnect">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+
+
+                                <!-- Reconnect Button -->
+                                <button class="btn btn-success btn-sm"
+                                        th:id="'reconnect-' + ${server.serverName}"
+                                        th:attr="onclick='reconnectServer(\'' + ${server.serverName} + '\')'"
+                                        th:disabled="${server.isConnected}"
+                                        title="Reconnect">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Nested accordion for Topics and Consumers -->
                     <div class="accordion mt-3">

@@ -247,3 +247,102 @@ function submitForm() {
 function submitNewConnection() {
     handleConnectionSubmission(true);
 }
+
+
+// disconnect and reconnect
+// Disconnect a server
+function updateButtonStates(serverName, isConnected) {
+    const disconnectBtn = document.getElementById(`disconnect-${serverName}`);
+    const reconnectBtn = document.getElementById(`reconnect-${serverName}`);
+
+    if (!disconnectBtn || !reconnectBtn) return;
+
+    disconnectBtn.disabled = !isConnected;
+    reconnectBtn.disabled = isConnected;
+}
+
+let disconnectServerName = "";
+
+function showDisconnectModal(serverName) {
+    disconnectServerName = serverName;
+    document.getElementById("serverToDisconnect").textContent = serverName;
+
+    let disconnectModal = new bootstrap.Modal(document.getElementById("disconnectModal"));
+    disconnectModal.show();
+}
+
+document.getElementById("confirmDisconnect").addEventListener("click", function () {
+    disconnectServer(disconnectServerName);
+});
+
+
+function disconnectServer(serverName) {
+    const payload = { serverName };
+
+    fetch("/disconnect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "NO_CLIENT_FOUND") {
+                window.location.href = "http://localhost:8020";
+                return;
+            }
+
+            if (!data.isSuccessful) {
+                showNotification(data.message, "danger");
+                return;
+            }
+
+            showNotification(data.message, "success");
+            updateButtonStates(serverName, false);
+        })
+        .catch(error => {
+            console.error("Error disconnecting:", error);
+            showNotification("Failed to disconnect.", "danger");
+        }).finally(() => {
+        window.location.href = "http://localhost:8020/main";
+    });
+}
+
+function reconnectServer(serverName) {
+    const payload = { serverName };
+
+    fetch("/reconnect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "NO_CLIENT_FOUND") {
+                window.location.href = "http://localhost:8020";
+                return;
+            }
+
+            if (!data.isSuccessful) {
+                showNotification(data.message, "danger");
+                return;
+            }
+
+            showNotification(data.message, "success");
+            updateButtonStates(serverName, true);
+            collapseAccordion(`collapse-topics-${serverName}`);
+            collapseAccordion(`collapse-consumers-${serverName}`);
+        })
+        .catch(error => {
+            console.error("Error reconnecting:", error);
+            showNotification("Failed to reconnect.", "danger");
+        });
+}
+
+function collapseAccordion(accordionId) {
+    const accordion = document.getElementById(accordionId);
+    if (accordion && accordion.classList.contains("show")) {
+        new bootstrap.Collapse(accordion, { toggle: true });
+    }
+}
+
+

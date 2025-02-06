@@ -54,4 +54,26 @@ public class KafkaController {
         model.addAttribute("connections", kafkaService.getConnections());
         return "main-page";
     }
+
+    // disconnect reconnect
+    @PostMapping("/disconnect")
+    public ResponseEntity<ResponseResult> disconnect(@RequestBody ServerNameFilter serverFilter) {
+        try {
+            ResponseResult disconnectResponse = kafkaService.disconnectServer(serverFilter.getServerName());
+            return ResponseEntity.ok(disconnectResponse);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
+        }
+    }
+
+    @PostMapping("/reconnect")
+    public ResponseEntity<ResponseResult> reconnect(@RequestBody ServerNameFilter serverFilter) {
+        try {
+            ResponseResult reconnectResponse = kafkaService.reconnectServer(serverFilter.getServerName());
+            return ResponseEntity.ok(reconnectResponse);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
+        }
+    }
+
 }

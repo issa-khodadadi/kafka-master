@@ -14,4 +14,5 @@ public class KafkaConnectionHolderForm {
     private String serverName;
     private String serverIP;
     private String serverPort;
+    private Boolean isConnected;
 }

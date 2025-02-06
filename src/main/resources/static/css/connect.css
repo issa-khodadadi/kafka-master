@@ -52,12 +52,6 @@ body {
     z-index: 1000;
 }
 
-.alert-danger {
-    display: none;
-    color: red;
-    font-size: 0.75rem;
-    margin-top: 8px;
-}
 
 /* Smooth Logo + App Name Transition */
 #logo-container {
@@ -106,12 +100,4 @@ body {
     margin: 10px 0;
     border-radius: 5px;
     text-align: center;
-}
-.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
 }

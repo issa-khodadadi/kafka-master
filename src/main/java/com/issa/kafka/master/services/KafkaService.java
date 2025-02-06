@@ -51,6 +51,18 @@ public class KafkaService {
         return new ResponseResult(ServiceResultStatus.DONE, true, adminClient);
     }
 
+    public ResponseResult getCurrentConnection(String connectionName) {
+        KafkaConnectionHolderForm currentConnection = connections.get(connectionName);
+        if (currentConnection == null) {
+            return new ResponseResult(
+                    ServiceResultStatus.NO_CONNECTION_FOUND,
+                    false
+            );
+        }
+
+        return new ResponseResult(ServiceResultStatus.DONE, true, currentConnection);
+    }
+
     public KafkaConsumer<String, String> createKafkaConsumer(String connectionName, AdminClient adminClient) {
         if (adminClient == null) {
             return null;

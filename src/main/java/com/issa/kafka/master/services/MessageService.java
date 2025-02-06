@@ -2,6 +2,7 @@ package com.issa.kafka.master.services;
 
 import com.issa.kafka.master.configs.ConfigService;
 import com.issa.kafka.master.dto.filters.GetAllMessagesFilter;
+import com.issa.kafka.master.dto.forms.KafkaConnectionHolderForm;
 import com.issa.kafka.master.dto.views.MessageView;
 import com.issa.kafka.master.enums.ServiceResultStatus;
 import com.issa.kafka.master.utility.ResponseResult;
@@ -11,8 +12,12 @@ import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.TopicPartitionInfo;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -159,8 +164,6 @@ public class MessageService {
         return messages;
     }
 
-
-
     private boolean isWithinDateRange(long messageTime, String fromDate, String toDate) {
         long fromMillis = Long.MIN_VALUE;
         long toMillis = Long.MAX_VALUE;
@@ -195,4 +198,63 @@ public class MessageService {
     private ResponseResult handleException(Exception e) {
         return new ResponseResult(ServiceResultStatus.FAIL_TO_GET_MESSAGES, false);
     }
+
+    // send single and multiple messages
+    public ResponseResult sendMessage(String topicName, String connectionName, int partition, Map<String, String> message) {
+        try {
+            ResponseResult createProducerResponseResult = this.createProducer(connectionName);
+            if (!createProducerResponseResult.getIsSuccessful()) {
+                return createProducerResponseResult;
+            }
+
+            KafkaProducer<String, String> producer = (KafkaProducer<String, String>) createProducerResponseResult.getResult();
+
+            producer.send(new ProducerRecord<>(topicName, partition, message.get("key"), message.get("value"))).get();
+            return new ResponseResult(ServiceResultStatus.DONE, true);
+        } catch (Exception e) {
+            return new ResponseResult(
+                    ServiceResultStatus.FAIL_TO_SEND_MESSAGE,
+                    false);
+        }
+    }
+
+    // send multiple messages
+    public ResponseResult sendMessages(String topicName, String connectionName, int partition, List<Map<String, String>> messages) {
+        try {
+            ResponseResult createProducerResponseResult = this.createProducer(connectionName);
+            if (!createProducerResponseResult.getIsSuccessful()) {
+                return createProducerResponseResult;
+            }
+
+            KafkaProducer<String, String> producer = (KafkaProducer<String, String>) createProducerResponseResult.getResult();
+
+            for (Map<String, String> message : messages) {
+                producer.send(new ProducerRecord<>(topicName, partition, message.get("key"), message.get("value"))).get();
+            }
+            return new ResponseResult(ServiceResultStatus.DONE, true);
+        } catch (Exception e) {
+            return new ResponseResult(
+                    ServiceResultStatus.FAIL_TO_SEND_MESSAGE,
+                    false);
+        }
+    }
+
+    private ResponseResult createProducer(String connectionName) {
+        ResponseResult connectionResponseResult = kafkaService.getCurrentConnection(connectionName);
+        if (!connectionResponseResult.getIsSuccessful()) {
+            return connectionResponseResult;
+        }
+
+        KafkaConnectionHolderForm currentConnection = (KafkaConnectionHolderForm) connectionResponseResult.getResult();
+
+        Properties props = new Properties();
+        props.put("bootstrap.servers", currentConnection.getServerIP() + ":" + currentConnection.getServerPort());
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
+
+
+        return new ResponseResult(ServiceResultStatus.DONE, true, new KafkaProducer<>(props));
+    }
+
 }

@@ -124,7 +124,7 @@ public class Validation {
                 "remote.log.storage.enable", "remote.log.segment.bytes", "remote.log.retention.ms",
 
                 // Additional settings
-                "index.interval.bytes", "delete.topic.enable", "auto.create.topics.enable"
+                "index.interval.bytes"/*, "delete.topic.enable"*/, "auto.create.topics.enable"
         );
 
         return validKeys.contains(configKey);
@@ -157,7 +157,7 @@ public class Validation {
                         configValue.equals("CreateTime") || configValue.equals("LogAppendTime");
 
                 case "log.cleaner.enable", "unclean.leader.election.enable", "preallocate",
-                     "remote.log.storage.enable", "auto.create.topics.enable", "delete.topic.enable",
+                     "remote.log.storage.enable", "auto.create.topics.enable"/*, "delete.topic.enable"*/,
                      "message.downconversion.enable" ->
                         configValue.equals("true") || configValue.equals("false");
 

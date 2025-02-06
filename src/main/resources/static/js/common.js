@@ -83,3 +83,73 @@ window.addEventListener("resize", adjustMessageDisplay);
 // Call the function on page load
 document.addEventListener("DOMContentLoaded", adjustMessageDisplay);
 
+// reset tab forms in topic detail
+function resetForms() {
+    // Reset all form inputs in the Properties tab
+    document.getElementById("keyContentType").selectedIndex = 0;
+    document.getElementById("valueContentType").selectedIndex = 0;
+
+    // Reset all form inputs in the Data tab
+    document.getElementById("fromDateTime").value = "";
+    document.getElementById("toDateTime").value = "";
+    document.getElementById("messageCount").value = 100;
+    document.getElementById("orderBy").selectedIndex = 0;
+
+    // Reset Partition Dropdown in messages filter
+    partitionDropdown.innerHTML = '<option></option>';
+
+    // Reset Partition Details Section
+    const partitionDetails = document.getElementById("partition-details");
+    partitionDetails.innerHTML = `
+        <div class="alert alert-info">Select a partition to see details.</div>
+    `;
+
+    // Reset Send Message Modal
+    const sendMessageModal = document.getElementById("sendMessageModal");
+    sendMessageModal.removeAttribute("data-partition");
+    document.getElementById("singleMessageKey").value = "";
+    document.getElementById("singleMessageValue").value = "";
+    document.getElementById("multipleMessagesInput").value = "";
+}
+
+// =============== NOTIFICATION =========================== //
+function showNotification(message, type = "info") {
+    const alertDiv = document.createElement("div");
+
+    // Define alert icon based on type
+    let icon;
+    switch (type) {
+        case "success":
+            icon = "✔️"; // Checkmark for success
+            break;
+        case "danger":
+            icon = "❌"; // Cross for error
+            break;
+        case "warning":
+            icon = "⚠️"; // Warning icon
+            break;
+        default:
+            icon = "ℹ️"; // Info icon
+            break;
+    }
+
+    // Create the alert with animation
+    alertDiv.className = `custom-alert alert-${type}`;
+    alertDiv.innerHTML = `
+        <span class="alert-icon">${icon}</span>
+        <span class="alert-message">${message}</span>
+    `;
+
+    document.body.appendChild(alertDiv);
+
+    // Smooth fade-in effect
+    setTimeout(() => {
+        alertDiv.classList.add("show");
+    }, 100);
+
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+        alertDiv.classList.remove("show");
+        setTimeout(() => alertDiv.remove(), 500);
+    }, 4000);
+}

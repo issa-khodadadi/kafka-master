@@ -246,51 +246,6 @@
                     </div>
                 </div>
             </div>
-
-
-            <!-- Modal for Sending Messages -->
-            <div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="sendMessageModalLabel">Send Message</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <ul class="nav nav-tabs" id="sendMessageTabs">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-bs-toggle="tab" href="#singleMessageTab">Single Message</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-bs-toggle="tab" href="#multipleMessageTab">Multiple Messages</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content mt-3">
-                                <!-- Single Message -->
-                                <div class="tab-pane fade show active" id="singleMessageTab">
-                                    <div class="mb-3">
-                                        <label for="singleMessageKey" class="form-label">Key</label>
-                                        <input type="text" class="form-control" id="singleMessageKey">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="singleMessageValue" class="form-label">Value</label>
-                                        <textarea class="form-control" id="singleMessageValue"></textarea>
-                                    </div>
-                                    <button class="btn btn-primary" onclick="sendSingleMessage()">Send</button>
-                                </div>
-                                <!-- Multiple Messages -->
-                                <div class="tab-pane fade" id="multipleMessageTab">
-                                    <div class="mb-3">
-                                        <label for="multipleMessagesInput" class="form-label">Messages (JSON Array)</label>
-                                        <textarea class="form-control" id="multipleMessagesInput"></textarea>
-                                    </div>
-                                    <button class="btn btn-primary" onclick="sendMultipleMessages()">Send</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

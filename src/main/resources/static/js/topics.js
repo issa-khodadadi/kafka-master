@@ -150,18 +150,6 @@ function initializeTooltips() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // Function to load more configurations
 function resetAddTopicModal() {
     // Set default values for main fields

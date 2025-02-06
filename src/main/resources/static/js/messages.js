@@ -299,6 +299,13 @@ function adjustMessageDisplay() {
 
 
 // SEND MESSAGE
+function openSendMessageModal(partition) {
+    document.getElementById("sendMessageModal").setAttribute("data-partition", partition);
+    sendMessageModal.show();
+}
+const sendMessageModal = new bootstrap.Modal(document.getElementById("sendMessageModal"));
+
+
 function sendSingleMessage() {
     const partition = document.getElementById("sendMessageModal").getAttribute("data-partition");
     const key = document.getElementById("singleMessageKey").value.trim();
@@ -322,8 +329,11 @@ function sendSingleMessage() {
         .then(response => response.json())
         .then(data => {
             if (!data.isSuccessful) {
+                sendMessageModal.hide();
                 showNotification(data.message, "danger");
             }
+
+            sendMessageModal.hide();
             showNotification(data.message, "success");
 
             // Clear input fields after successful send
@@ -373,11 +383,13 @@ function sendMultipleMessages() {
         .then(response => response.json())
         .then(data => {
             if (!data.isSuccessful) {
+                sendMessageModal.hide();
                 showNotification(data.message, "danger");
                 return;
             }
 
-            showNotification("Messages sent successfully!", "success");
+            sendMessageModal.hide();
+            showNotification(data.message, "success");
 
             // Clear input field after successful send
             document.getElementById("multipleMessagesInput").value = "";

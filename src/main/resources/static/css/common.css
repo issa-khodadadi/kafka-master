@@ -195,3 +195,60 @@ body.loading {
 .gray-option {
     color: gray !important;
 }
+
+
+/*notification style*/
+/* Notification Box Styling */
+.custom-alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 250px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Show animation */
+.custom-alert.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Alert Colors */
+.alert-success {
+    background-color: #d4edda;
+    color: #198754;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Alert Icon */
+.alert-icon {
+    font-size: 18px;
+}
+
+/* Alert Message */
+.alert-message {
+    flex: 1;
+}

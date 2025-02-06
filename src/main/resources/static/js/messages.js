@@ -90,7 +90,7 @@ function loadPartitionsForTopicOnClick() {
         serverName: activeConnectionName
     };
 
-    fetch('/partitions', {
+    fetch('/partitions/getall', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -298,6 +298,95 @@ function adjustMessageDisplay() {
 }
 
 
+// SEND MESSAGE
+function sendSingleMessage() {
+    const partition = document.getElementById("sendMessageModal").getAttribute("data-partition");
+    const key = document.getElementById("singleMessageKey").value.trim();
+    const value = document.getElementById("singleMessageValue").value.trim();
+    const topicName = getSelectedTopicName();
+    const connectionName = getSelectedConnectionName();
+    const modalBody = document.querySelector("#sendMessageModal .modal-body");
+
+    const payload = {
+        topicName,
+        serverName: connectionName,
+        partition: parseInt(partition),
+        message: [{ key, value }]
+    };
+
+    fetch("messages/sendsingle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.isSuccessful) {
+                showNotification(data.message, "danger");
+            }
+            showNotification(data.message, "success");
+
+            // Clear input fields after successful send
+            document.getElementById("singleMessageKey").value = "";
+            document.getElementById("singleMessageValue").value = "";
+        })
+        .catch(error => {
+            console.error("Error sending message:", error);
+            showNotification(error.message, "danger");
+        });
+}
+
+function sendMultipleMessages() {
+    const partition = document.getElementById("sendMessageModal").getAttribute("data-partition");
+    const messagesInput = document.getElementById("multipleMessagesInput").value.trim();
+    const topicName = getSelectedTopicName();
+    const connectionName = getSelectedConnectionName();
+    const modalBody = document.querySelector("#sendMessageModal .modal-body");
+
+    // Process the input string to create an array of key-value pairs
+    let messages = messagesInput.split(",").map(msg => {
+        const parts = msg.split(":");
+        return {
+            key: parts[0]?.trim() || "default-key",
+            value: parts[1]?.trim() || ""
+        };
+    });
+
+    // Validate parsed messages
+    if (messages.length === 0 || messages.some(m => !m.value)) {
+        showNotification("Invalid message format. Use 'key:value,key2:value2' format.", "danger");
+        return;
+    }
+
+    const payload = {
+        topicName,
+        serverName: connectionName,
+        partition: parseInt(partition),
+        message: messages
+    };
+
+    fetch("/messages/sendmultiple", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.isSuccessful) {
+                showNotification(data.message, "danger");
+                return;
+            }
+
+            showNotification("Messages sent successfully!", "success");
+
+            // Clear input field after successful send
+            document.getElementById("multipleMessagesInput").value = "";
+        })
+        .catch(error => {
+            console.error("Error sending messages:", error);
+            showNotification("Failed to send messages. Please try again.", "danger");
+        });
+}
 
 
 

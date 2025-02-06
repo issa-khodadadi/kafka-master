@@ -4,6 +4,7 @@ public enum ServiceResultStatus {
     // general status
     DONE,
     ERROR,
+    PENDING,
     NO_CLIENT_FOUND,
 
 
@@ -14,6 +15,7 @@ public enum ServiceResultStatus {
     SERVER_NAME_DUPLICATE,
     SERVER_ID_DUPLICATE,
     CHECK_CONNECTION_PARAMS,
+    NO_CONNECTION_FOUND,
 
     // topic status
     FAIL_TO_GET_TOPICS,
@@ -25,6 +27,8 @@ public enum ServiceResultStatus {
     INVALID_REPLICA_COUNT,
     TOPIC_NAME_DUPLICATE,
     FAIL_TO_DELETE_TOPIC,
+    TOPIC_NOT_FOUND,
+    FAIL_TO_SEND_MESSAGE,
 
 
 

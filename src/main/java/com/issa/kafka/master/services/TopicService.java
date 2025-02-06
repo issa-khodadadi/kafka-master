@@ -132,7 +132,7 @@ public class TopicService {
     }
 
     // Delete a topic configuration (set to null)
-    public ResponseResult deleteConfig(String topicName, String connectionName, String configName) {
+    /*public ResponseResult deleteConfig(String topicName, String connectionName, String configName) {
         try {
             ResponseResult adminClientResponseResult = kafkaService.getAdminClient(connectionName);
             if (!adminClientResponseResult.getIsSuccessful()) {
@@ -173,7 +173,67 @@ public class TopicService {
         } catch (Exception e) {
             return new ResponseResult(ServiceResultStatus.FAIL_TO_DELETE_CONFIG, false);
         }
+    }*/
+
+    public ResponseResult deleteConfig(String topicName, String connectionName, String configName) {
+        try {
+            ResponseResult adminClientResponseResult = kafkaService.getAdminClient(connectionName);
+            if (!adminClientResponseResult.getIsSuccessful()) {
+                return adminClientResponseResult;
+            }
+
+            AdminClient adminClient = (AdminClient) adminClientResponseResult.getResult();
+            ConfigResource resource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
+
+            Config currentConfig = adminClient.describeConfigs(Collections.singleton(resource))
+                    .all().get().get(resource);
+
+            Optional<ConfigEntry> entryToDelete = currentConfig.entries()
+                    .stream()
+                    .filter(configEntry -> configEntry.name().equals(configName))
+                    .findFirst();
+
+            if (entryToDelete.isPresent()) {
+                ConfigEntry existingEntry = entryToDelete.get();
+
+                String resetValue = getDefaultResetValue(existingEntry);
+
+                Map<String, String> updatedEntries = currentConfig.entries()
+                        .stream()
+                        .filter(configEntry -> !configEntry.name().equals(configName))
+                        .collect(Collectors.toMap(ConfigEntry::name, ConfigEntry::value));
+
+                updatedEntries.put(configName, resetValue);
+
+                Config newConfig = new Config(updatedEntries.entrySet()
+                        .stream()
+                        .map(entry -> new ConfigEntry(entry.getKey(), entry.getValue()))
+                        .collect(Collectors.toList()));
+
+                adminClient.alterConfigs(Collections.singletonMap(resource, newConfig)).all().get();
+                return new ResponseResult(ServiceResultStatus.DONE, true);
+            } else {
+                return new ResponseResult(ServiceResultStatus.CONFIG_NOT_FOUND, false);
+            }
+        } catch (Exception e) {
+            return new ResponseResult(ServiceResultStatus.FAIL_TO_DELETE_CONFIG, false, e.getMessage());
+        }
     }
+    private String getDefaultResetValue(ConfigEntry existingEntry) {
+        String value = existingEntry.value();
+        if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+            return "false";
+        }
+
+        try {
+            Integer.parseInt(value);
+            return "0";
+        } catch (NumberFormatException ignored) {
+
+        }
+        return "";
+    }
+
 
     // Create Kafka topic
     public ResponseResult createTopic(CreateTopicForm createTopicForm) {

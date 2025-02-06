@@ -267,9 +267,11 @@ function showDisconnectModal(serverName) {
     disconnectServerName = serverName;
     document.getElementById("serverToDisconnect").textContent = serverName;
 
-    let disconnectModal = new bootstrap.Modal(document.getElementById("disconnectModal"));
+
     disconnectModal.show();
 }
+
+let disconnectModal = new bootstrap.Modal(document.getElementById("disconnectModal"));
 
 document.getElementById("confirmDisconnect").addEventListener("click", function () {
     disconnectServer(disconnectServerName);
@@ -292,19 +294,23 @@ function disconnectServer(serverName) {
             }
 
             if (!data.isSuccessful) {
+                disconnectModal.hide();
                 showNotification(data.message, "danger");
                 return;
             }
 
+            disconnectModal.hide();
             showNotification(data.message, "success");
             updateButtonStates(serverName, false);
+
+            setTimeout(() => {
+                window.location.href = "http://localhost:8020/main";
+            }, 1000);
         })
         .catch(error => {
             console.error("Error disconnecting:", error);
             showNotification("Failed to disconnect.", "danger");
-        }).finally(() => {
-        window.location.href = "http://localhost:8020/main";
-    });
+        });
 }
 
 function reconnectServer(serverName) {

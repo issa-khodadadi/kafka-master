@@ -83,16 +83,20 @@ function fetchTopics(connectionName) {
                     button.classList.add('btn', 'topic-button', 'mt-1'); // Added `mt-1` for spacing
                     button.innerText = topic;
 
-                    // Add click event to fetch messages and highlight the selected button
                     button.addEventListener('click', () => {
                         handleTopicSelection(topic);
-                        // Remove the active state from all buttons
-                        document.querySelectorAll(`#topicsList-${connectionName} .btn`).forEach(btn => {
-                            btn.classList.remove('active');
+
+                        // Show topic details and hide consumer details
+                        document.querySelector(".topic-details").style.display = "block";
+                        document.querySelector(".consumer-details").style.display = "none";
+
+                        // Remove active state from all topic and consumer buttons
+                        document.querySelectorAll(".topic-button, .consumer-button").forEach(btn => {
+                            btn.classList.remove("active-topic", "active-consumer");
                         });
 
-                        // Add active state to the clicked button
-                        button.classList.add('active');
+                        // Add active state to the clicked topic button
+                        button.classList.add("active-topic");
 
                         fetchMessagesCount(topic, connectionName);
                         resetTabs();
@@ -106,10 +110,9 @@ function fetchTopics(connectionName) {
                         document.getElementById("properties-tab").click();
                     });
 
+
                     topicsList.appendChild(button); // Directly append the button to the list
                 });
-
-                initializeTooltips();
             }
         })
         .catch(error => {
@@ -142,12 +145,6 @@ function hideLoadingState(loadingOverlay) {
     loadingOverlay.style.display = 'none';
     document.body.classList.remove('loading');
 }
-
-function initializeTooltips() {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-}
-
 
 
 // Function to load more configurations

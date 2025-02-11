@@ -1,5 +1,5 @@
 <!-- Consumer Fragment -->
-<div  id="col-md-9 consumer-details" th:fragment="consumers">
+<div class="col-md-9 consumer-details" th:fragment="consumers">
     <h2 id="consumer-name" style="display:none;">Consumer Name</h2> <!-- Consumer Name Placeholder -->
     <div class="tab-content" id="consumer-tabs" style="display:none;">
         <ul class="nav nav-tabs">
@@ -16,7 +16,26 @@
         <div class="tab-content mt-2">
             <div class="tab-pane fade show active" id="general" role="tabpanel">
                 <!-- General consumer details go here -->
-                <p>General information about the consumer.</p>
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <td><strong>Is Active:</strong></td>
+                        <td id="consumer-isActive">-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Consumer Type:</strong></td>
+                        <td id="consumer-type">-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Offset Stored In:</strong></td>
+                        <td id="consumer-offset">-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auto Commit:</strong></td>
+                        <td id="consumer-autoCommit">-</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="tab-pane fade" id="properties-consumer" role="tabpanel">
                 <!-- Consumer properties go here -->

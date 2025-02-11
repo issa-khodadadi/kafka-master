@@ -1,8 +1,8 @@
 // fetch consumers
 function fetchConsumers(connectionName) {
     console.log("Fetching consumers for connection:", connectionName);
+    setSelectedConnection(connectionName);
 
-    // Prepare the payload for the POST request
     const payload = {
         serverName: connectionName
     };
@@ -43,22 +43,31 @@ function fetchConsumers(connectionName) {
                 const li = document.createElement('li');
                 li.classList.add('list-group-item');
 
-                // Create button with ellipsis and tooltip for full name
                 const button = document.createElement('button');
                 button.classList.add('btn', 'btn-secondary', 'w-100', 'mt-2', 'consumer-button');
                 button.innerText = consumer;
-                button.setAttribute('data-bs-toggle', 'tooltip');
-                button.setAttribute('data-bs-placement', 'top');
-                button.setAttribute('title', consumer); // Tooltip with full consumer name
 
                 button.addEventListener('click', () => {
                     console.log("Fetching details for consumer:", consumer);
-                    // Update UI to show consumer name and tabs
+
+
+                    document.querySelector(".consumer-details").style.display = "block";
+                    document.querySelector(".topic-details").style.display = "none";
+
+                    document.querySelectorAll(".consumer-button, .topic-button").forEach(btn => {
+                        btn.classList.remove("active-consumer", "active-topic");
+                    });
+
+                    button.classList.add("active-consumer");
+
+                    fetchConsumerDetails(consumer);
+
                     const consumerNameElement = document.getElementById("consumer-name");
-                    consumerNameElement.innerText = consumer;
                     consumerNameElement.style.display = "block";
+                    consumerNameElement.innerText = `Consumer: ${consumer}`;
+
                     document.getElementById("consumer-tabs").style.display = "block";
-                    document.getElementById("general-tab").click(); // Activate the "General" tab
+                    document.getElementById("general-tab").click();
                 });
 
                 li.appendChild(button);
@@ -71,3 +80,48 @@ function fetchConsumers(connectionName) {
             consumersList.innerHTML = '<li class="list-group-item text-danger">Failed to load consumers.</li>';
         });
 }
+
+function fetchConsumerDetails(consumerName) {
+    console.log("Fetching details for consumer:", consumerName);
+
+    const connectionName = getSelectedConnectionName();
+
+    const payload = {
+        serverName: connectionName,
+        consumerName: consumerName
+    };
+
+    fetch("/consumers/details", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("Failed to fetch consumer details");
+            return response.json();
+        })
+        .then(data => {
+            if (!data.isSuccessful) {
+                console.error("Error fetching consumer details:", data.message);
+                document.getElementById("general").innerHTML =
+                    `<p class="text-danger">${data.message || "Failed to load consumer details."}</p>`;
+                return;
+            }
+
+            const details = data.result;
+
+            document.getElementById("general").innerHTML = `
+                <p><strong>Consumer Type:</strong> ${details.consumerType}</p>
+                <p><strong>Active:</strong> ${details.isActive ? "Yes" : "No"}</p>
+                <p><strong>Offset Stored In:</strong> ${details.offsetStoredIn}</p>
+                <p><strong>Auto Commit:</strong> ${details.autoCommit ? "Enabled" : "Disabled"}</p>
+            `;
+        })
+        .catch(error => {
+            console.error("Error fetching consumer details:", error);
+            document.getElementById("general").innerHTML =
+                `<p class="text-danger">An error occurred while loading consumer details.</p>`;
+        });
+}
+
+

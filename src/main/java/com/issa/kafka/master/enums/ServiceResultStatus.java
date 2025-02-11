@@ -53,5 +53,7 @@ public enum ServiceResultStatus {
     FAIL_TO_GET_PARTITION_DETAIL,
 
     // consumer status
-    FAIL_TO_GET_CONSUMERS;
+    FAIL_TO_GET_CONSUMERS,
+    CONSUMER_GRP_NOT_FOUND,
+    FAIL_TO_GET_CONSUMER_DETAIL;
 }

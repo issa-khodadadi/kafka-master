@@ -1,5 +1,6 @@
 package com.issa.kafka.master.controllers;
 
+import com.issa.kafka.master.dto.filters.ConsumerServerNameFilter;
 import com.issa.kafka.master.dto.filters.ServerNameFilter;
 import com.issa.kafka.master.enums.ServiceResultStatus;
 import com.issa.kafka.master.services.ConsumerService;
@@ -33,6 +34,26 @@ public class ConsumerController {
                     consumerService.getConsumerGroups(serverNameFilter.getServerName());
 
             return ResponseEntity.ok(getConsumersResponseResult);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
+        }
+    }
+
+    @PostMapping("/details")
+    public ResponseEntity<ResponseResult> getConsumerDetails(@RequestBody ConsumerServerNameFilter serverNameFilter) {
+        try {
+            if (serverNameFilter.isRequiredFieldsNotFilled()) {
+                return ResponseEntity.ok(
+                        new ResponseResult(
+                                ServiceResultStatus.FIELDS_REQUIRED,
+                                false));
+            }
+
+            ResponseResult consumerDetails =
+                    consumerService.getConsumerDetails(serverNameFilter.getServerName(),
+                            serverNameFilter.getConsumerName());
+
+            return ResponseEntity.ok(consumerDetails);
         } catch (Exception e) {
             return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
         }

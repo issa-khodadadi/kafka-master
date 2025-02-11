@@ -252,3 +252,27 @@ body.loading {
 .alert-message {
     flex: 1;
 }
+
+
+/* Normal Topic and Consumer Buttons */
+/* Normal Topic and Consumer Buttons */
+.topic-button, .consumer-button {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Active Topic Button */
+.topic-button.active-topic {
+    background-color: #007bff !important; /* Bootstrap primary blue */
+    color: white !important;
+    border-color: #0056b3 !important;
+}
+
+/* Active Consumer Button */
+.consumer-button.active-consumer {
+    background-color: #28a745 !important; /* Bootstrap success green */
+    color: white !important;
+    border-color: #1e7e34 !important;
+}

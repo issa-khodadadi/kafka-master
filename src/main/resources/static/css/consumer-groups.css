@@ -13,18 +13,30 @@
     transition: background-color 0.3s; /* Optional: Transition for hover effect */
 }
 
-.consumer-button:hover {
-    background-color: #e0e0e0; /* Optional: Change background color on hover */
-}
-
-.consumer-button[data-bs-toggle="tooltip"] {
-    cursor: pointer;
-}
-
 /* Responsive Styles */
 @media (max-width: 576px) {
     .consumer-button {
         font-size: 0.65rem; /* Further reduced font size for small screens */
         padding: 2px 6px; /* Reduce padding for compact view */
     }
+}
+
+.consumer-details {
+    padding: 10px;
+    display: none;
+}
+
+/* Normal consumer button */
+.consumer-button {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Active (selected) consumer button */
+.consumer-button.active-consumer {
+    background-color:#333 !important;
+    color: white !important;
+    /*border-color: #0056b3 !important;*/
 }

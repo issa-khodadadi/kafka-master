@@ -1,20 +1,31 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Select all accordion collapses
-    const accordions = document.querySelectorAll('.accordion-collapse');
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".accordion-item").forEach(accordionItem => {
+        const topicsAccordion = accordionItem.querySelector("[id^='collapse-topics-']");
+        const consumersAccordion = accordionItem.querySelector("[id^='collapse-consumers-']");
+        const topicButtons = accordionItem.querySelector(".topic-buttons");
 
-    accordions.forEach(accordion => {
-        // Add event listener for the 'shown.bs.collapse' event (when the accordion is expanded)
-        accordion.addEventListener('shown.bs.collapse', function () {
-            const serverName = accordion.getAttribute('data-server-name');
+        if (topicsAccordion) {
+            topicsAccordion.addEventListener("shown.bs.collapse", function () {
+                topicButtons.classList.remove("d-none"); // Show topic buttons
+                const serverName = topicsAccordion.getAttribute("data-server-name");
+                fetchTopics(serverName); // Fetch topics when expanded
+            });
 
-            if (accordion.id.startsWith('collapse-topics')) {
-                fetchTopics(serverName);
-            } else if (accordion.id.startsWith('collapse-consumers')) {
-                fetchConsumers(serverName);
-            }
-        });
+            topicsAccordion.addEventListener("hidden.bs.collapse", function () {
+                topicButtons.classList.add("d-none"); // Hide topic buttons when collapsed
+            });
+        }
+
+        if (consumersAccordion) {
+            consumersAccordion.addEventListener("shown.bs.collapse", function () {
+                const serverName = consumersAccordion.getAttribute("data-server-name");
+                fetchConsumers(serverName); // Fetch consumers when expanded
+            });
+        }
     });
 });
+
+
 
 // Resize Column Functionality
 document.querySelectorAll("th").forEach(th => {

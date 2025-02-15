@@ -3,14 +3,14 @@
 body {
     background-color: #f8f9fa;
     display: flex;
-    flex-direction: row; /* Ensure flex direction is set for responsiveness */
+    flex-direction: row;
     height: 100vh;
     margin: 0;
 }
 
 .sidebar {
     width: 20%;
-    padding: 5px; /* Reduced padding */
+    padding: 5px;
     background-color: #fff;
     border-right: 1px solid #ddd;
     overflow-y: auto;
@@ -18,57 +18,57 @@ body {
 }
 
 .accordion-button {
-    padding: 0.15rem 0.25rem; /* Reduced padding */
-    height: auto; /* Adjusting height to auto for responsive design */
+    padding: 0.15rem 0.25rem;
+    height: auto;
     line-height: 1.2;
-    font-size: 0.8rem; /* Reduced font size */
+    font-size: 0.8rem;
 }
 
 .list-group-item {
-    padding: 0.15rem 0.25rem; /* Reduced padding */
-    margin-bottom: 0.1rem; /* Reduced margin */
+    padding: 0.15rem 0.25rem;
+    margin-bottom: 0.1rem;
     border: 1px solid #dee2e6;
-    border-radius: 0.2rem; /* Reduced border radius */
+    border-radius: 0.2rem;
 }
 
 /* Topic Button Styles */
 .topic-button {
-    width: 100%; /* Make buttons full-width */
+    width: 100%;
     text-align: center;
-    background-color: #e3f2fd; /* Light blue background */
-    color: #0d6efd; /* Blue text */
-    border: 1px solid #ddd; /* Light border */
-    padding: 0.5rem 0.75rem; /* Add consistent padding */
-    font-size: 0.9rem; /* Slightly smaller font size */
-    border-radius: 5px; /* Rounded edges */
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
-    margin-bottom: 3px; /* Add spacing between buttons */
+    background-color: #e3f2fd;
+    color: #0d6efd;
+    border: 1px solid #ddd;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 3px;
 }
 
 /* Button Hover Effect */
 .topic-button:hover {
-    background-color: #cfe2ff; /* Slightly darker blue on hover */
-    color: #084298; /* Darker text color */
+    background-color: #cfe2ff;
+    color: #084298;
 }
 
 /* Active State */
 .topic-button.active {
-    background-color: #0d6efd; /* Dark blue background */
-    color: #ffffff; /* White text */
-    font-weight: bold; /* Highlight the active button */
+    background-color: #0d6efd;
+    color: #ffffff;
+    font-weight: bold;
 }
 
 .accordion-button::after {
-    font-size: 1.2rem; /* Reduced icon size */
+    font-size: 1.2rem;
     margin-bottom: 1px;
 }
 
 .tab-content {
-    margin-top: 5px; /* Reduced margin top */
+    margin-top: 5px;
 }
 
 .text-danger {
-    color: red !important; /* Retain this style */
+    color: red !important;
 }
 
 .table {
@@ -80,7 +80,7 @@ body {
     background-color: #f8f9fa;
     color: black;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 6px; /* Reduced padding */
+    padding: 6px;
     position: relative;
 }
 
@@ -89,18 +89,18 @@ body {
 }
 
 .table td {
-    max-width: 150px; /* Reduced max width */
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     position: relative;
-    padding: 6px; /* Reduced padding */
+    padding: 6px;
     background-color: white;
 }
 
 .table td {
-    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1); /* Reduced shadow size */
-    margin-bottom: -2px; /* Adjusted margin */
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: -2px;
 }
 
 .table tr td:last-child {
@@ -108,14 +108,14 @@ body {
 }
 
 th {
-    position: relative; /* Keep this style */
+    position: relative;
 }
 
 .table-container {
     overflow-x: auto;
-    max-height: 350px; /* Reduced max height */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow size */
-    border-radius: 4px; /* Reduced border radius */
+    max-height: 350px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
     border: 1px solid #ddd;
     background-color: #ffffff;
     transition: height 0.3s ease;
@@ -140,7 +140,7 @@ body.loading {
 }
 
 .loading-svg {
-    animation: fadeInOut 2s infinite; /* Keep this style */
+    animation: fadeInOut 2s infinite;
 }
 
 @keyframes fadeInOut {
@@ -155,35 +155,35 @@ body.loading {
 /* Responsive Styles */
 @media (max-width: 768px) {
     .sidebar {
-        width: 100%; /* Full width for smaller screens */
-        border-right: none; /* Remove border on small screens */
-        height: auto; /* Make height auto */
+        width: 100%;
+        border-right: none;
+        height: auto;
     }
 
     body {
-        flex-direction: column; /* Stack the layout */
+        flex-direction: column;
     }
 
     .table-container {
-        max-height: 250px; /* Adjust max height for smaller screens */
+        max-height: 250px;
     }
 }
 
 @media (max-width: 576px) {
     .accordion-button {
-        font-size: 0.7rem; /* Further reduce font size */
-        padding: 0.1rem 0.2rem; /* Further reduce padding */
+        font-size: 0.7rem;
+        padding: 0.1rem 0.2rem;
     }
 
     .list-group-item,
     .table th,
     .table td {
-        font-size: 0.7rem; /* Reduce font size for table items */
-        padding: 4px; /* Further reduce padding */
+        font-size: 0.7rem;
+        padding: 4px;
     }
 
     .table-container {
-        max-height: 200px; /* Adjust max height for very small screens */
+        max-height: 200px;
     }
 }
 
@@ -196,13 +196,11 @@ body.loading {
     color: gray !important;
 }
 
-
-/*notification style*/
 /* Notification Box Styling */
 .custom-alert {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 20px;
     padding: 12px 16px;
     border-radius: 8px;
     font-size: 16px;
@@ -219,28 +217,28 @@ body.loading {
 /* Show animation */
 .custom-alert.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
 }
 
 /* Alert Colors */
 .alert-success {
-    background-color: #d4edda;
-    color: #198754;
+    background-color: #198754;
+    color: #f0f0f0;
 }
 
 .alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #721c24;
+    color: #f0f0f0;
 }
 
 .alert-warning {
-    background-color: #fff3cd;
-    color: #856404;
+    background-color: #856404;
+    color: #f0f0f0;
 }
 
 .alert-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
+    background-color: #0c5460;
+    color: #f0f0f0;
 }
 
 /* Alert Icon */
@@ -253,8 +251,6 @@ body.loading {
     flex: 1;
 }
 
-
-/* Normal Topic and Consumer Buttons */
 /* Normal Topic and Consumer Buttons */
 .topic-button, .consumer-button {
     background-color: #f0f0f0;
@@ -265,14 +261,14 @@ body.loading {
 
 /* Active Topic Button */
 .topic-button.active-topic {
-    background-color: #007bff !important; /* Bootstrap primary blue */
+    background-color: #007bff !important;
     color: white !important;
     border-color: #0056b3 !important;
 }
 
 /* Active Consumer Button */
 .consumer-button.active-consumer {
-    background-color: #28a745 !important; /* Bootstrap success green */
+    background-color: #28a745 !important;
     color: white !important;
     border-color: #1e7e34 !important;
 }

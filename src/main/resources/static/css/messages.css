@@ -1,20 +1,20 @@
 /* Messages Table */
 #messagesTable tbody tr {
-    height: 24px; /* Reduced height for smaller rows */
-    line-height: 24px; /* Adjusted line height to match the new height */
+    height: 24px;
+    line-height: 24px;
 }
 
 #messagesTable tbody td {
-    padding: 2px; /* Reduced padding for table cells */
-    font-size: 0.8rem; /* Reduced font size for better fit */
+    padding: 2px;
+    font-size: 0.8rem;
 }
 
 #messagesTable tbody tr:nth-child(odd) {
-    background-color: #f8f9fa; /* Keep alternating row colors */
+    background-color: #f8f9fa;
 }
 
 #messagesTable tbody tr:nth-child(even) {
-    background-color: #ffffff; /* Keep alternating row colors */
+    background-color: #ffffff;
 }
 
 /* Message Detail */
@@ -22,60 +22,57 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.1rem 0.3rem; /* Reduced padding for smaller touch targets */
+    padding: 0.1rem 0.3rem;
     cursor: pointer;
-    font-size: 0.75rem; /* Reduced font size */
+    font-size: 0.75rem;
 }
 
 .view-message i {
-    font-size: 0.8rem; /* Reduced icon size */
+    font-size: 0.8rem;
 }
 
 .view-message.active {
-    color: #007bff; /* Active state color */
-    background-color: #d1ecff; /* Active state background */
-    border-color: #007bff; /* Active state border */
+    color: #007bff;
+    background-color: #d1ecff;
+    border-color: #007bff;
 }
 
 #detail-value {
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-y: auto;
-    max-height: 350px; /* Reduced max height for responsiveness */
+    max-height: 350px;
 }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     #detail-value {
-        white-space: normal; /* Collapse whitespace on smaller screens */
+        white-space: normal;
         word-wrap: break-word;
-        overflow-y: hidden; /* Disable vertical overflow */
-        max-height: none; /* Allow for full height on smaller screens */
+        overflow-y: hidden;
+        max-height: none;
     }
 
     .view-message {
-        padding: 0.05rem 0.2rem; /* Further reduce padding for smaller touch targets */
-        font-size: 0.65rem; /* Further reduced font size on small screens */
+        padding: 0.05rem 0.2rem;
+        font-size: 0.65rem;
     }
 
     .view-message i {
-        font-size: 0.65rem; /* Further reduce icon size on small screens */
+        font-size: 0.65rem;
     }
 }
 
 /*Get all messages style*/
 .blur {
-    filter: blur(5px); /* Adjust the blur intensity */
-    pointer-events: none; /* Prevent interaction with blurred content */
-    opacity: 0.5; /* Dim the content for better effect */
+    filter: blur(5px);
+    pointer-events: none;
+    opacity: 0.5;
 }
 
 /*Refresh BTN style*/
 button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-}
-
-button {/* Smooth transition for blur effect */
 }
 

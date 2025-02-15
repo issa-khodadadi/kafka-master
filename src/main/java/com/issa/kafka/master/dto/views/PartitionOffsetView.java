@@ -1,6 +1,5 @@
 package com.issa.kafka.master.dto.views;
 
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,8 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MessageView extends PartitionOffsetView {
-    String key;
-    String value;
-    Long time;
+public class PartitionOffsetView {
+    Integer partition;
+    Long offset;
 }

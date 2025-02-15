@@ -7,10 +7,7 @@
                 <a class="nav-link active" id="general-tab" data-bs-toggle="tab" href="#general" role="tab">General</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="properties-tab-consumer" data-bs-toggle="tab" href="#properties-consumer" role="tab">Properties</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="offsets-tab" data-bs-toggle="tab" href="#offsets" role="tab">Offsets</a>
+                <a class="nav-link" id="offsets-tab" data-bs-toggle="tab" href="#offsets" role="tab" onclick="fetchConsumerOffsets()">Offsets</a>
             </li>
         </ul>
         <div class="tab-content mt-2">
@@ -37,13 +34,25 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="properties-consumer" role="tabpanel">
-                <!-- Consumer properties go here -->
-                <p>Properties of the consumer.</p>
-            </div>
+
+
             <div class="tab-pane fade" id="offsets" role="tabpanel">
-                <!-- Offsets information goes here -->
-                <p>Offsets information for the consumer.</p>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>Partition</th>
+                        <th>Start Offset</th>
+                        <th>End Offset</th>
+                        <th>Offset</th>
+                        <th>Lag</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="offsets-table-body">
+                    <!-- Offset rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

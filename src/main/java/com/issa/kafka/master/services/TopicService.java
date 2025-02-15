@@ -40,7 +40,7 @@ public class TopicService {
 
             AdminClient adminClient = (AdminClient) adminClientResponseResult.getResult();
 
-            List<String> topics = adminClient.listTopics().names().get().stream().toList();
+            List<String> topics = adminClient.listTopics().names().get().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList();
             return new ResponseResult(
                     ServiceResultStatus.DONE,
                     true,
@@ -125,7 +125,7 @@ public class TopicService {
             return new ResponseResult(ServiceResultStatus.DONE, true, resultMap);
         } catch (Exception e) {
             return new ResponseResult(
-                    ServiceResultStatus.FAIL_TO_ADD_OR_EDIT_CONFIG,
+                    ServiceResultStatus.FAIL_TO_GET_CONFIGS,
                     false
             );
         }

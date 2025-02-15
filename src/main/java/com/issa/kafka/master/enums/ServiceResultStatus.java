@@ -44,6 +44,7 @@ public enum ServiceResultStatus {
 
     // config status
     FAIL_TO_ADD_OR_EDIT_CONFIG,
+    FAIL_TO_GET_CONFIGS,
     INVALID_CONFIG_KEY,
     INVALID_CONFIG_VALUE,
     FAIL_TO_DELETE_CONFIG,
@@ -55,5 +56,6 @@ public enum ServiceResultStatus {
     // consumer status
     FAIL_TO_GET_CONSUMERS,
     CONSUMER_GRP_NOT_FOUND,
-    FAIL_TO_GET_CONSUMER_DETAIL;
+    FAIL_TO_GET_CONSUMER_DETAIL,
+    FAIL_TO_GET_CONSUMER_OFFSET;
 }

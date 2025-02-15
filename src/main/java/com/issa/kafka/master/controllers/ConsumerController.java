@@ -4,7 +4,6 @@ import com.issa.kafka.master.dto.filters.ConsumerServerNameFilter;
 import com.issa.kafka.master.dto.filters.ServerNameFilter;
 import com.issa.kafka.master.enums.ServiceResultStatus;
 import com.issa.kafka.master.services.ConsumerService;
-import com.issa.kafka.master.services.KafkaService;
 import com.issa.kafka.master.utility.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -58,4 +57,20 @@ public class ConsumerController {
             return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
         }
     }
+
+    @PostMapping("/offsets")
+    public ResponseEntity<ResponseResult> getConsumerOffsets(@RequestBody ConsumerServerNameFilter filter) {
+        try {
+            if (filter.isRequiredFieldsNotFilled()) {
+                return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.FIELDS_REQUIRED, false));
+            }
+
+            ResponseResult response = consumerService.getConsumerOffsets(filter.getServerName(), filter.getConsumerName());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
+        }
+    }
+
 }

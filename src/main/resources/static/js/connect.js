@@ -263,21 +263,21 @@ function updateButtonStates(serverName, isConnected) {
 
 let disconnectServerName = "";
 
+// Show Disconnect Modal
 function showDisconnectModal(serverName) {
     disconnectServerName = serverName;
     document.getElementById("serverToDisconnect").textContent = serverName;
-
-
     disconnectModal.show();
 }
 
 let disconnectModal = new bootstrap.Modal(document.getElementById("disconnectModal"));
 
+// Confirm Disconnect Click Handler
 document.getElementById("confirmDisconnect").addEventListener("click", function () {
     disconnectServer(disconnectServerName);
 });
 
-
+// Disconnect Server
 function disconnectServer(serverName) {
     const payload = { serverName };
 
@@ -313,6 +313,7 @@ function disconnectServer(serverName) {
         });
 }
 
+// Reconnect Server
 function reconnectServer(serverName) {
     const payload = { serverName };
 
@@ -344,6 +345,7 @@ function reconnectServer(serverName) {
         });
 }
 
+// Collapse Accordion
 function collapseAccordion(accordionId) {
     const accordion = document.getElementById(accordionId);
     if (accordion && accordion.classList.contains("show")) {

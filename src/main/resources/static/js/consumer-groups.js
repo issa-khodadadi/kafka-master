@@ -35,7 +35,7 @@ function fetchConsumers(connectionName) {
 
             const consumerGroups = data.result || [];
             if (consumerGroups.length === 0) {
-                consumersList.innerHTML = '<li class="list-group-item text-muted">No consumers found.</li>';
+                consumersList.innerHTML = '<li class="list-group-item text-warning">No consumers found.</li>';
                 return;
             }
 
@@ -86,6 +86,8 @@ function fetchConsumerDetails(consumerName) {
 
     const connectionName = getSelectedConnectionName();
 
+    setSelectedConsumerName(consumerName);
+
     const payload = {
         serverName: connectionName,
         consumerName: consumerName
@@ -122,6 +124,106 @@ function fetchConsumerDetails(consumerName) {
             document.getElementById("general").innerHTML =
                 `<p class="text-danger">An error occurred while loading consumer details.</p>`;
         });
+}
+
+function fetchConsumerOffsets() {
+    const consumerName = getSelectedConsumerName();
+    const connectionName = getSelectedConnectionName();
+
+    console.log("Fetching offsets for consumer:", consumerName);
+
+    const payload = {
+        serverName: connectionName,
+        consumerName: consumerName
+    };
+
+    fetch("/consumers/offsets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+        .then(response => {
+            if (!response.ok) throw new Error("Failed to fetch consumer offsets");
+            return response.json();
+        })
+        .then(data => {
+            if (!data.isSuccessful) {
+                console.error("Error fetching consumer offsets:", data.message);
+                document.getElementById("offsets-table-body").innerHTML =
+                    `<tr><td colspan="6" class="text-danger">${data.message || "Failed to load consumer offsets."}</td></tr>`;
+                return;
+            }
+
+            const offsets = data.result;
+            const offsetsTableBody = document.getElementById("offsets-table-body");
+            offsetsTableBody.innerHTML = ""; // Clear previous data
+
+            offsets.forEach(offset => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${offset.topic}</td>
+                    <td>${offset.partition}</td>
+                    <td>${offset.startOffset}</td>
+                    <td>${offset.endOffset}</td>
+                    <td><span id="offset-value-${offset.topic}-${offset.partition}">${offset.offset}</span></td>
+                    <td>${offset.lag}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editOffset('${offset.topic}', ${offset.partition}, ${offset.offset})">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="stopConsumer('${consumerName}')">
+                            <i class="bi bi-stop-circle"></i>
+                        </button>
+                        <button class="btn btn-sm btn-success" onclick="resumeConsumer('${consumerName}')">
+                            <i class="bi bi-play-circle"></i>
+                        </button>
+                    </td>
+                `;
+
+                offsetsTableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching consumer offsets:", error);
+            document.getElementById("offsets-table-body").innerHTML =
+                `<tr><td colspan="6" class="text-danger">An error occurred while loading consumer offsets.</td></tr>`;
+        });
+}
+
+// Edit offset function (opens a prompt)
+function editOffset(topic, partition, currentOffset) {
+    const newOffset = prompt(`Enter new offset for ${topic} (Partition ${partition}):`, currentOffset);
+    if (newOffset !== null) {
+        document.getElementById(`offset-value-${topic}-${partition}`).innerText = newOffset;
+        // You can send an API request here to update the offset in Kafka
+    }
+}
+
+// Stop consumer function
+function stopConsumer(consumerName) {
+    console.log("Stopping consumer:", consumerName);
+    alert(`Consumer ${consumerName} has been stopped.`);
+}
+
+// Resume consumer function
+function resumeConsumer(consumerName) {
+    console.log("Resuming consumer:", consumerName);
+    alert(`Consumer ${consumerName} has been resumed.`);
+}
+
+let selectedConsumerName = null;
+
+function setSelectedConsumerName(consumerName) {
+    selectedConsumerName = consumerName;
+}
+
+function getSelectedConsumerName() {
+    if (!selectedConsumerName) {
+        console.error("No consumer selected");
+        return null;
+    }
+    return selectedConsumerName;
 }
 
 

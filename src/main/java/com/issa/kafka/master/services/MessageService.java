@@ -147,14 +147,15 @@ public class MessageService {
             for (ConsumerRecord<String, String> record : records) {
                 long messageTimestamp = record.timestamp();
 
+                MessageView messageView = new MessageView();
                 if (this.isWithinDateRange(messageTimestamp, filter.getFromDate(), filter.getToDate())) {
-                    messages.add(new MessageView(
-                            record.partition(),
-                            record.offset(),
-                            record.key(),
-                            record.value(),
-                            messageTimestamp
-                    ));
+                    messageView.setPartition(record.partition());
+                    messageView.setOffset(record.offset());
+                    messageView.setKey(record.key());
+                    messageView.setValue(record.value());
+                    messageView.setTime(record.timestamp());
+
+                    messages.add(messageView);
 
                     if (messages.size() >= count) break;
                 }

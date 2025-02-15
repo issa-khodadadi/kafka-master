@@ -56,22 +56,22 @@ body {
 /* Smooth Logo + App Name Transition */
 #logo-container {
     display: flex;
-    flex-direction: column; /* Initial stacked state */
+    flex-direction: column;
     align-items: center;
-    transition: all 1.5s ease-in-out; /* Increased duration for smooth transition */
+    transition: all 1.5s ease-in-out;
     opacity: 1;
 }
 
 #logo-container.inline {
-    flex-direction: row; /* Change to inline (horizontal) layout */
+    flex-direction: row;
     justify-content: center;
-    gap: 10px; /* Space between logo and app name */
-    transform: translateY(-20px); /* Slight upward movement */
-    opacity: 0; /* Start as transparent */
+    gap: 10px;
+    transform: translateY(-20px);
+    opacity: 0;
 }
 
 #logo-container.inline.show {
-    opacity: 1; /* Fade in to visibility */
+    opacity: 1;
 }
 
 #app-name {

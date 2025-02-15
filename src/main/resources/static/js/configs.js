@@ -47,9 +47,11 @@ function loadConfigs() {
                 const errorCell = document.createElement("td");
                 errorCell.colSpan = 3; // Span across all columns
                 errorCell.textContent = data.message || "Failed to load configurations.";
-                errorCell.classList.add("text-danger", "text-center"); // Add error styling
+                errorCell.classList.add("text-danger", "text-center");
                 errorRow.appendChild(errorCell);
                 tableBody.appendChild(errorRow);
+                showNotification(data.message, 'danger')
+
                 return;
             }
 

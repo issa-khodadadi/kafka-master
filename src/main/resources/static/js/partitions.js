@@ -79,7 +79,7 @@ function loadPartitionDetails(topicName, connectionName, partition) {
             if (!data.isSuccessful) {
                 console.error("Error fetching partition details:", data.message);
                 document.getElementById("partition-details").innerHTML = `
-                    <p class="text-danger">Failed to load partition details: ${data.message}</p>
+                    <p class="text-danger">${data.message}</p>
                 `;
                 return;
             }
@@ -133,7 +133,7 @@ function loadPartitionDetails(topicName, connectionName, partition) {
         .catch((error) => {
             console.error("Error loading partition details:", error);
             document.getElementById("partition-details").innerHTML = `
-                <p class="text-danger">Error loading partition details. Check the console for details.</p>
+                <p class="text-danger">Fail to load partition details.</p>
             `;
         });
 }

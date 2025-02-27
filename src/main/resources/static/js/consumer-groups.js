@@ -168,14 +168,15 @@ function fetchConsumerOffsets() {
                     <td>${offset.endOffset}</td>
                     <td><span id="offset-value-${offset.topic}-${offset.partition}">${offset.offset}</span></td>
                     <td>${offset.lag}</td>
+                    <td>${offset.isPaused ? "Yes" : "No"}</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" onclick="editOffset('${offset.topic}', ${offset.partition}, ${offset.offset})">
+                        <button class="btn btn-sm btn-primary" onclick="openEditOffsetModal('${offset.topic}', ${offset.partition}, ${offset.offset})">
                             <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="stopConsumer('${consumerName}')">
-                            <i class="bi bi-stop-circle"></i>
+                        <button class="btn btn-sm btn-danger" onclick="stopConsumer('${consumerName}')" ${offset.isPaused ? "disabled" : ""}>
+                            <i class="bi bi-pause-circle"></i>
                         </button>
-                        <button class="btn btn-sm btn-success" onclick="resumeConsumer('${consumerName}')">
+                        <button class="btn btn-sm btn-success" onclick="resumeConsumer('${consumerName}')" ${!offset.isPaused ? "disabled" : ""}>
                             <i class="bi bi-play-circle"></i>
                         </button>
                     </td>
@@ -191,22 +192,13 @@ function fetchConsumerOffsets() {
         });
 }
 
-// Edit offset function (opens a prompt)
-function editOffset(topic, partition, currentOffset) {
-    const newOffset = prompt(`Enter new offset for ${topic} (Partition ${partition}):`, currentOffset);
-    if (newOffset !== null) {
-        document.getElementById(`offset-value-${topic}-${partition}`).innerText = newOffset;
-        // You can send an API request here to update the offset in Kafka
-    }
-}
-
-// Stop consumer function
+// Stop consumer function TODO:
 function stopConsumer(consumerName) {
     console.log("Stopping consumer:", consumerName);
     alert(`Consumer ${consumerName} has been stopped.`);
 }
 
-// Resume consumer function
+// Resume consumer function TODO:
 function resumeConsumer(consumerName) {
     console.log("Resuming consumer:", consumerName);
     alert(`Consumer ${consumerName} has been resumed.`);
@@ -226,4 +218,82 @@ function getSelectedConsumerName() {
     return selectedConsumerName;
 }
 
+function openEditOffsetModal(topic, partition, currentOffset) {
+    document.getElementById("editOffsetTopic").innerText = topic;
+    document.getElementById("editOffsetPartition").innerText = partition;
+    document.getElementById("editOffsetInput").value = currentOffset;
+    document.getElementById("editOffsetSection").style.display = "none"; // Hide input initially
+    document.getElementById("offsetTypeSelect").value = "START"; // Default to specific offset
 
+    const editOffsetModal = new bootstrap.Modal(document.getElementById("editOffsetModal"));
+    editOffsetModal.show();
+}
+
+document.getElementById("offsetTypeSelect").addEventListener("change", function () {
+    if (this.value === "SPECIFIC") {
+        document.getElementById("editOffsetSection").style.display = "block";
+    } else {
+        document.getElementById("editOffsetSection").style.display = "none";
+    }
+});
+
+function saveOffsetChange() {
+    console.log("Save button clicked!"); // Debugging log
+
+    const connectionName = getSelectedConnectionName();
+    const consumerName = getSelectedConsumerName();
+    const topic = document.getElementById("editOffsetTopic").innerText;
+    const partition = parseInt(document.getElementById("editOffsetPartition").innerText);
+    const offsetType = document.getElementById("offsetTypeSelect").value;
+    const offset = offsetType === "SPECIFIC" ? parseInt(document.getElementById("editOffsetInput").value) : null;
+
+    const errorMessageElement = document.getElementById("offsetErrorMessage");
+
+    // Reset error message
+    errorMessageElement.style.display = "none";
+    errorMessageElement.innerText = "";
+
+    console.log("Payload:", { connectionName, consumerName, topic, partition, offset, offsetType }); // Debugging log
+
+    const payload = {
+        serverName: connectionName,
+        consumerName: consumerName,
+        topicName: topic,
+        partition: partition,
+        offset: offset,
+        offsetType: offsetType
+    };
+
+    fetch("/consumers/update-offset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+        .then(response => {
+            console.log("Response received:", response);
+            if (!response.ok) throw new Error("Failed to update offset");
+            return response.json();
+        })
+        .then(data => {
+            console.log("Server response:", data);
+            if (!data.isSuccessful) {
+                errorMessageElement.innerText = "Error: " + (data.message || "Failed to update offset.");
+                errorMessageElement.style.display = "block";
+                return;
+            }
+
+            showNotification(data.message, "success");
+
+            // Close the modal
+            const editOffsetModal = bootstrap.Modal.getInstance(document.getElementById("editOffsetModal"));
+            if (editOffsetModal) {
+                editOffsetModal.hide();
+            }
+            fetchConsumerOffsets(); // Refresh offsets
+        })
+        .catch(error => {
+            console.error("Error updating offset:", error);
+            errorMessageElement.innerText = "An unexpected error occurred while updating the offset.";
+            errorMessageElement.style.display = "block";
+        });
+}

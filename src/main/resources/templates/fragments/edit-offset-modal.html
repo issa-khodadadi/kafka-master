@@ -1,0 +1,40 @@
+<!-- Edit Offset Modal -->
+<div th:fragment="editOffsetModal">
+    <div class="modal fade" id="editOffsetModal" tabindex="-1" aria-labelledby="editOffsetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editOffsetModalLabel">Edit Offset</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Topic:</strong> <span id="editOffsetTopic"></span></p>
+                    <p><strong>Partition:</strong> <span id="editOffsetPartition"></span></p>
+
+                    <div class="mb-3">
+                        <label for="offsetTypeSelect" class="form-label">Set Offset To:</label>
+                        <select id="offsetTypeSelect" class="form-select">
+                            <option value="START">Start of Partition</option>
+                            <option value="END">End of Partition</option>
+                            <option value="SPECIFIC">Specific Offset</option>
+                        </select>
+                    </div>
+
+                    <div id="editOffsetSection" class="mb-3">
+                        <label for="editOffsetInput" class="form-label">Offset:</label>
+                        <input type="number" id="editOffsetInput" class="form-control" min="0">
+                    </div>
+                </div>
+
+                <!-- Error Message Placeholder -->
+                <div id="offsetErrorMessage" class="alert alert-danger" style="display: none; margin: 10px;">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveOffsetChange()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

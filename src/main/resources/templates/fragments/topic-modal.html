@@ -1,6 +1,16 @@
 <!-- Topics Fragment -->
 <div class="col-md-9 topic-details" th:fragment="topics">
-    <h2 id="topic-name" style="display:none;">Topic: <span id="dynamic-topic-name"></span></h2>
+    <div id="topic-header" style="display: none; align-items: center; gap: 10px;">
+        <h4 id="topic-name" style="margin: 0;">Topic: <span id="dynamic-topic-name"></span></h4>
+
+        <button id="deleteTopicBtn" class="btn btn-danger btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteTopicModal"
+                title="Delete">
+            <i class="bi bi-trash"></i>
+        </button>
+    </div>
+
     <!-- Placeholder for topic name -->
     <div class="tab-content" id="topic-tabs" style="display:none;">
         <ul class="nav nav-tabs">

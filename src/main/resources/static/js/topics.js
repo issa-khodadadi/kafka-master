@@ -84,7 +84,7 @@ function fetchTopics(connectionName) {
                     button.innerText = topic;
 
                     button.addEventListener('click', () => {
-                        handleTopicSelection(topic);
+                        // handleTopicSelection(topic);
 
                         // Show topic details and hide consumer details
                         document.querySelector(".topic-details").style.display = "block";
@@ -101,11 +101,15 @@ function fetchTopics(connectionName) {
                         fetchMessagesCount(topic, connectionName);
                         resetTabs();
 
-                        const topicNameElement = document.getElementById("topic-name");
+                        // const topicNameElement = document.getElementById("topic-name");
+                        // const deleteTopicBtn = document.getElementById("deleteTopicBtn");
                         const dynamicTopicNameElement = document.getElementById("dynamic-topic-name");
+                        const topicHeader = document.getElementById("topic-header");
 
                         dynamicTopicNameElement.innerText = topic;
-                        topicNameElement.style.display = "block";
+                        // topicNameElement.style.display = "block";
+                        // deleteTopicBtn.style.display = "block";
+                        topicHeader.style.display = "flex";
                         document.getElementById("topic-tabs").style.display = "block";
                         document.getElementById("properties-tab").click();
                     });
@@ -126,7 +130,6 @@ function fetchTopics(connectionName) {
 }
 
 function refreshTopics() {
-    deleteTopicBtn.disabled=true;
     const connectionName = getSelectedConnectionName();
     fetchTopics(connectionName);
 }
@@ -347,130 +350,74 @@ function addTopic() {
 }
 
 // delete topic
-const deleteTopicBtn = document.getElementById("deleteTopicBtn");
+// const deleteTopicBtn = document.getElementById("deleteTopicBtn");
 
 // Function to handle topic selection
-function handleTopicSelection(topicName) {
-    deleteTopicBtn.disabled = false;
-    deleteTopicBtn.setAttribute("data-topic-name", topicName);
-}
+// function handleTopicSelection(topicName) {
+//     deleteTopicBtn.disabled = false;
+//     deleteTopicBtn.setAttribute("data-topic-name", topicName);
+// }
+
+let topicToDelete = document.getElementById("dynamic-topic-name").textContent;
 
 deleteTopicBtn.addEventListener("click", function () {
-    const topicName = deleteTopicBtn.getAttribute("data-topic-name");
-
-    if (!topicName) {
-        alert("No topic selected.");
-        return;
-    }
-
-    // Set topic name in the delete modal
-    document.getElementById("topicToDelete").textContent = topicName;
+    // Set topic name in delete modal
+    document.getElementById("topicToDelete").textContent = getSelectedTopicName();
 });
 
 // Function to delete a topic
-document.addEventListener("DOMContentLoaded", function () {
-    const deleteTopicBtn = document.getElementById("deleteTopicBtn");
-    let selectedTopic = "";
-
-    // Enable delete button when a topic is selected
-    function handleTopicSelection(topicName) {
-        selectedTopic = topicName;
-        deleteTopicBtn.disabled = false;
-        deleteTopicBtn.setAttribute("data-topic-name", topicName);
+function deleteTopic() {
+    const modalBody = document.querySelector("#deleteTopicModal .modal-body");
+    const connectionName = getSelectedConnectionName();
+    // Remove any existing error messages
+    const existingError = modalBody.querySelector(".error-message");
+    if (existingError) existingError.remove();
+    if (!connectionName) {
+        alert("Please select a connection.");
+        return;
     }
 
-    // Show topic name in delete confirmation modal
-    deleteTopicBtn.addEventListener("click", function () {
-        const topicName = deleteTopicBtn.getAttribute("data-topic-name");
+    const topicName = getSelectedTopicName();
 
-        if (!topicName) {
-            alert("No topic selected.");
-            return;
-        }
-
-        // Set topic name in delete modal
-        document.getElementById("topicToDelete").textContent = topicName;
-    });
-
-    // Handle delete confirmation
-    document.getElementById("confirmDeleteTopicBtn").addEventListener("click", function () {
-        const topicName = deleteTopicBtn.getAttribute("data-topic-name");
-        if (!topicName) {
-            alert("No topic selected.");
-            return;
-        }
-
-        // Perform the delete operation
-        deleteTopic(topicName);
-    });
-
-    // Function to delete a topic
-    function deleteTopic(topicName) {
-        const modalBody = document.querySelector("#deleteTopicModal .modal-body");
-        const connectionName = getSelectedConnectionName();
-
-        // Remove any existing error messages
-        const existingError = modalBody.querySelector(".error-message");
-        if (existingError) existingError.remove();
-
-        if (!connectionName) {
-            alert("Please select a connection.");
-            return;
-        }
-
-        const payload = {
-            topicName: topicName,
-            serverName: connectionName,
-        };
-
-        fetch("/topics/delete", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (!data.isSuccessful) {
-                    throw new Error(data.message || "Failed to delete topic.");
-                }
-
-                // Show success message
-                showNotification(data.message, "success");
-
-                // Refresh topics list
-                refreshTopics(connectionName);
-
-                // Disable delete button after deletion
-                deleteTopicBtn.disabled = true;
-
-                // Close modal only on success
-                const deleteTopicModal = bootstrap.Modal.getInstance(document.getElementById("deleteTopicModal"));
-                deleteTopicModal.hide();
-            })
-            .catch((error) => {
-                console.error("Error deleting topic:", error);
-
-                // Show error inside the modal (do not close it)
-                const errorDiv = document.createElement("div");
-                errorDiv.className = "error-message text-danger mt-2";
-                errorDiv.textContent = error.message || "Failed to delete topic.";
-                modalBody.appendChild(errorDiv);
-            });
-    }
-
-    // Attach click event to each topic in the list
-    document.querySelectorAll(".list-group").forEach(list => {
-        list.addEventListener("click", function (event) {
-            const clickedTopic = event.target.closest("li");
-            if (clickedTopic) {
-                handleTopicSelection(clickedTopic.textContent.trim());
+    const payload = {
+        topicName: topicName,
+        serverName: connectionName,
+    };
+    fetch("/topics/delete", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (!data.isSuccessful) {
+                throw new Error(data.message || "Failed to delete topic.");
             }
-        });
-    });
-});
+            // Show success message
+            showNotification(data.message, "success");
+            // Refresh topics list
+            refreshTopics(connectionName);
+            // Disable delete button after deletion
+            deleteTopicBtn.disabled = true;
+            // Close modal only on success
+            const deleteTopicModal = bootstrap.Modal.getInstance(document.getElementById("deleteTopicModal"));
+            deleteTopicModal.hide();
 
+            setTimeout(() => {
+                window.location.href = "http://localhost:8020/main";
+            }, 1000);
+        })
+        .catch((error) => {
+            console.error("Error deleting topic:", error);
+            // Show error inside the modal (do not close it)
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error-message text-danger mt-2";
+            errorDiv.textContent = error.message || "Failed to delete topic.";
+            modalBody.appendChild(errorDiv);
+        });
+}
 
 // ===================== SHARED METHODS =====================//
 function getSelectedTopicName() {

@@ -13,4 +13,5 @@ public class ConsumerOffsetView extends PartitionOffsetView {
     Long startOffset;
     Long endOffset;
     Long lag;
+    Boolean isPaused;
 }

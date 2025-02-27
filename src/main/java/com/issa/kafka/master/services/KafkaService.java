@@ -163,17 +163,20 @@ public class KafkaService {
     // Disconnect a Kafka Server
     public ResponseResult disconnectServer(String serverName) {
         if (!clients.containsKey(serverName)) {
-            return new ResponseResult(ServiceResultStatus.NO_CLIENT_FOUND, false, "No active connection found.");
+            return new ResponseResult(ServiceResultStatus.NO_CLIENT_FOUND, false);
         }
 
         KafkaConnectionHolderForm connectionForm = connections.get(serverName);
         connectionForm.setIsConnected(false);
 
         try {
-            AdminClient client = clients.remove(serverName); // Remove from active clients
+            AdminClient client = clients.remove(serverName);
             if (client != null) {
-                client.close(); // Properly close the Kafka connection
+                client.close();
             }
+
+            connections.get(serverName).setIsConnected(false);
+
             return new ResponseResult(ServiceResultStatus.DONE, true);
         } catch (Exception e) {
             return new ResponseResult(ServiceResultStatus.ERROR, false);
@@ -193,8 +196,9 @@ public class KafkaService {
             // Validate the new connection
             newClient.listTopics().names().get(3, TimeUnit.SECONDS);
 
-            clients.put(serverName, newClient); // Store new connection
+            clients.put(serverName, newClient);
 
+            connections.get(serverName).setIsConnected(true);
             return new ResponseResult(ServiceResultStatus.DONE, true);
         } catch (Exception e) {
             return new ResponseResult(ServiceResultStatus.ERROR, false);

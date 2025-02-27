@@ -2,6 +2,7 @@ package com.issa.kafka.master.controllers;
 
 import com.issa.kafka.master.dto.filters.ConsumerServerNameFilter;
 import com.issa.kafka.master.dto.filters.ServerNameFilter;
+import com.issa.kafka.master.dto.forms.ConsumerOffsetUpdateForm;
 import com.issa.kafka.master.enums.ServiceResultStatus;
 import com.issa.kafka.master.services.ConsumerService;
 import com.issa.kafka.master.utility.ResponseResult;
@@ -73,4 +74,25 @@ public class ConsumerController {
         }
     }
 
+    @PostMapping("/update-offset")
+    public ResponseEntity<ResponseResult> updateConsumerOffset(@RequestBody ConsumerOffsetUpdateForm offsetUpdateForm) {
+        try {
+            if (offsetUpdateForm.isRequiredFieldsNotFilled()) {
+                return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.FIELDS_REQUIRED, false));
+            }
+
+            ResponseResult response = consumerService.updateConsumerOffset(
+                    offsetUpdateForm.getServerName(),
+                    offsetUpdateForm.getConsumerName(),
+                    offsetUpdateForm.getTopicName(),
+                    offsetUpdateForm.getPartition(),
+                    offsetUpdateForm.getOffset(),
+                    offsetUpdateForm.getOffsetType()
+            );
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseResult(ServiceResultStatus.ERROR, false));
+        }
+    }
 }

@@ -1,7 +1,7 @@
 <img src="logo.png" alt="Kafka Master Logo" style="padding:10px; border-radius:8px;" width="200">
 
 # kafka-master
-this is a user interface to simplify kafka servers managemen.
+this is a user interface to simplify kafka servers management.
 
 Kafka Master is a Java-based management application for Apache Kafka servers. It provides an easy way to monitor and manage Kafka clusters, including topics, partitions, messages, consumers, and configurations, through a user-friendly web interface.
 

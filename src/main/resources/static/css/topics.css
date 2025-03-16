@@ -1,9 +1,9 @@
 .topic-details {
     flex-grow: 1;
-    padding: 15px; /* Reduced padding */
+    padding: 15px;
     background-color: #fff;
     overflow-y: hidden;
-    height: 100vh; /* Optional: Keep this if you want full height */
+    height: 100vh;
 }
 
 .topic-button {
@@ -12,34 +12,34 @@
     text-overflow: ellipsis;
     width: 100%;
     display: inline-block;
-    font-size: 0.75rem; /* Reduced font size */
-    padding: 4px 8px; /* Optional: Added padding for touch targets */
+    font-size: 0.75rem;
+    padding: 4px 8px;
 }
 
 /* Partitions */
 .partitions button {
-    padding: 0.1rem 0.3rem; /* Reduced padding */
-    height: 28px; /* Reduced height */
-    font-size: 0.75rem; /* Reduced font size */
-    margin: 0.05rem; /* Reduced margin */
+    padding: 0.1rem 0.3rem;
+    height: 28px;
+    font-size: 0.75rem;
+    margin: 0.05rem;
 }
 
 /* Responsive Styles */
 @media (max-width: 576px) {
     .topic-details {
-        padding: 10px; /* Further reduce padding for small screens */
+        padding: 10px;
     }
 
     .topic-button {
-        font-size: 0.65rem; /* Further reduce font size for small screens */
-        padding: 2px 4px; /* Further reduce padding */
+        font-size: 0.65rem;
+        padding: 2px 4px;
     }
 
     .partitions button {
-        padding: 0.05rem 0.2rem; /* Further reduce padding for buttons */
-        height: auto; /* Allow for automatic height */
-        font-size: 0.65rem; /* Further reduce font size for small screens */
-        margin: 0; /* Remove margin */
+        padding: 0.05rem 0.2rem;
+        height: auto;
+        font-size: 0.65rem;
+        margin: 0;
     }
 }
 
@@ -47,7 +47,7 @@
 .table-responsive thead th {
     position: sticky;
     top: 0;
-    background-color: #f8f9fa; /* Matches Bootstrap's default table header color */
+    background-color: #f8f9fa;
     z-index: 10;
 }
 
@@ -66,7 +66,7 @@
 
 /* Scrollable body styling */
 .table-responsive {
-    height: 100vh; /* Adjust height of the scrollable container */
+    height: 100vh;
     overflow-y: auto;
     border: 1px solid #ddd;
 }

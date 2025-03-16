@@ -1,13 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+
+
+/* Apply it to your elements */
+body {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
 
 body.loading {
     pointer-events: none;
-}
-
-body {
-    font-family: 'Roboto Mono', monospace;
-    background-color: #f8f9fa;
-    color: #333;
 }
 
 .form-container {

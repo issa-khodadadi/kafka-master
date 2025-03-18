@@ -19,16 +19,27 @@
             <div th:id="'collapse-' + ${server.serverName}" class="accordion-collapse collapse"
                  th:attr="aria-labelledby='heading-' + ${server.serverName}">
                 <div class="accordion-body">
-                    <!-- Server IP & Port -->
+                    <!-- Server IP & Port with Monitoring Icon -->
                     <div class="d-flex justify-content-between align-items-center">
-                        <strong><span th:text="${server.serverIP} + ':' + ${server.serverPort}">serverIP:port</span></strong>
+                        <div class="d-flex align-items-center">
+                            <!-- Monitoring Icon Before Server IP -->
+                            <a th:href="@{/monitoring/{serverName}(serverName=${server.serverName})}"
+                               class="text-primary me-2" title="Monitor">
+                                <i class="bi bi-speedometer2"></i>
+                            </a>
+                            <strong>
+                                <span th:text="${server.serverIP} + ':' + ${server.serverPort}">serverIP:port</span>
+                            </strong>
+                        </div>
+
                         <!-- Dropdown Menu (3-dot Button) -->
                         <div class="dropdown">
-                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="serverActionsDropdown"
+                            <button class="btn btn-light btn-sm dropdown-toggle" type="button"
+                                    th:id="'serverActionsDropdown-' + ${server.serverName}"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="serverActionsDropdown">
+                            <ul class="dropdown-menu dropdown-menu-end" th:aria-labelledby="'serverActionsDropdown-' + ${server.serverName}">
                                 <li>
                                     <button class="dropdown-item"
                                             th:id="'disconnect-' + ${server.serverName}"

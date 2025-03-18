@@ -118,6 +118,13 @@
 			<version>3.17.0</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webflux -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webflux</artifactId>
+			<version>6.1.16</version>
+		</dependency>
+
 
 		<!--		kafka test-->
 		<dependency>

@@ -115,6 +115,8 @@ Kafka Master is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 3. **Missing Dependencies**:
    - Run `mvn clean install` to rebuild the project and ensure all dependencies are resolved.
 
+## IMPORTANT
+This project provides a general-purpose interface that is still under development. It is not yet in a final or usable state and may contain bugs or missing features. I’m sharing it to get feedback and collaborate on improving it. Contributions, suggestions, and pull requests are very welcome!
 ## Contact
 
 For issues or feature requests, please open an issue in this repository or contact the maintainer via GitHub.
